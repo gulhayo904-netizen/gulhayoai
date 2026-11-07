@@ -1,0 +1,712 @@
+<!doctype html>
+<html lang="uz-Cyrl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+  :root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+  body{margin:0}
+  img{max-width:100%}
+  [hidden]{display:none!important}
+</style>
+<title>gulhayo.ai Master AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600&family=Spectral:ital,wght@0,300;0,400;1,300&display=swap">
+<style>
+/* Layout: a film of full-bleed "paintings". Each frame keeps its painting sticky behind flowing text; a thin blueprint grid with + marks sits on every frame.
+   Hero: curtain draws open on load, scroll zooms into the curtain cloth and cuts to its macro weave. */
+*,*::before,*::after{box-sizing:border-box}
+:root{
+  --lapis:#1d43c4;
+  --night:#0d1e66;
+  --cloud:#f6f7fb;
+  --cream:#efe8da;
+  --ink:#1b1d26;
+  --capsule:rgba(10,16,44,.86);
+  --gold:#d6a640;
+  --serif:"Spectral",Georgia,"Times New Roman",serif;
+  --sans:"Golos Text","Segoe UI",system-ui,-apple-system,sans-serif;
+  --gut-l:max(20px, env(safe-area-inset-left, 0px));
+  --gut-r:max(20px, env(safe-area-inset-right, 0px));
+  color-scheme:light;
+}
+html{background:var(--lapis)}
+body{background:var(--lapis);color:var(--cloud);font:400 16px/1.6 var(--sans);overflow-x:hidden;-webkit-font-smoothing:antialiased}
+p{margin:0}
+a{color:inherit}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid #ffd77a;outline-offset:3px;border-radius:6px}
+
+/* ---------- capsules ---------- */
+.cap{display:inline-flex;align-items:center;gap:9px;border-radius:999px;background:var(--capsule);color:#fff;text-decoration:none;
+  font:500 13px/1 var(--sans);padding:10px 15px;border:1px solid rgba(255,255,255,.1);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);cursor:pointer;transition:background .2s}
+.cap:hover{background:rgba(10,16,44,.98)}
+.cap svg{width:15px;height:15px;flex:none}
+.cap.lg{font-size:15px;padding:14px 20px}
+.cap.soft{background:rgba(255,255,255,.14);border-color:rgba(255,255,255,.3)}
+.cap.soft:hover{background:rgba(255,255,255,.24)}
+
+/* ---------- header ---------- */
+.top{position:fixed;z-index:20;left:0;right:0;top:0;display:flex;align-items:center;gap:10px;
+  padding:calc(14px + env(safe-area-inset-top, 0px)) var(--gut-r) 0 var(--gut-l);pointer-events:none}
+.top>*{pointer-events:auto}
+.logo{font:400 18px/1 var(--serif);letter-spacing:.01em;margin-right:auto;padding:9px 16px}
+.links{display:flex;gap:2px;padding:4px}
+.links a{padding:6px 11px;border-radius:999px;text-decoration:none;color:rgba(255,255,255,.82)}
+.links a:hover{background:rgba(255,255,255,.12);color:#fff}
+.lang{padding:4px;gap:2px}
+.lang button{border:0;background:none;cursor:pointer;padding:6px 10px;border-radius:999px;font:600 12px/1 var(--sans);color:rgba(255,255,255,.7)}
+.lang button[aria-pressed="true"]{background:#fff;color:var(--night)}
+.menu-btn{display:none}
+.menu{position:fixed;inset:0;z-index:30;background:rgba(10,16,44,.96);display:grid;align-content:center;gap:4px;padding:80px var(--gut-r) 40px var(--gut-l)}
+.menu a{font:300 34px/1.2 var(--serif);text-decoration:none;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.12)}
+.menu .cap{position:absolute;top:calc(14px + env(safe-area-inset-top, 0px));right:var(--gut-r)}
+
+/* ---------- frames ---------- */
+.frame{position:relative}
+.art{position:sticky;top:0;height:100vh;margin-bottom:-100vh;overflow:hidden;z-index:0}
+.art canvas,.art img{position:absolute;inset:0;width:100%;height:100%;display:block;object-fit:cover}
+.content{position:relative;z-index:2}
+.pin{position:sticky;top:0;min-height:100vh;display:flex;align-items:center;padding-block:110px 80px}
+.wrap{width:100%;max-width:1360px;margin:0 auto;padding-left:var(--gut-l);padding-right:var(--gut-r)}
+
+/* blueprint chrome: 1px lines and + marks */
+.chrome{position:absolute;inset:0;pointer-events:none;color:var(--chrome,rgba(255,255,255,.2));z-index:1}
+.chrome i{position:absolute;background:currentColor}
+.chrome .v{top:0;bottom:0;width:1px}
+.chrome .h{left:0;right:0;height:1px}
+.chrome .v1{left:var(--gut-l)} .chrome .v2{left:50%} .chrome .v3{right:var(--gut-r)}
+.chrome .h1{top:calc(76px + env(safe-area-inset-top, 0px))} .chrome .h2{bottom:56px}
+.chrome b{position:absolute;width:11px;height:11px;margin:-5px 0 0 -5px;color:var(--plus,rgba(255,255,255,.75))}
+.chrome b::before,.chrome b::after{content:"";position:absolute;background:currentColor}
+.chrome b::before{left:5px;top:0;width:1px;height:11px}
+.chrome b::after{top:5px;left:0;height:1px;width:11px}
+.chrome .p1{left:var(--gut-l);top:calc(76px + env(safe-area-inset-top, 0px))}
+.chrome .p2{left:50%;top:calc(76px + env(safe-area-inset-top, 0px))}
+.chrome .p3{left:calc(100% - var(--gut-r));top:calc(76px + env(safe-area-inset-top, 0px))}
+.chrome .p4{left:var(--gut-l);top:calc(100% - 56px)}
+.chrome .p5{left:50%;top:calc(100% - 56px)}
+.chrome .p6{left:calc(100% - var(--gut-r));top:calc(100% - 56px)}
+.light{--chrome:rgba(27,29,38,.12);--plus:rgba(27,29,38,.55);color:var(--ink)}
+
+h1,h2,h3{font-weight:300;margin:0}
+.display{font:300 clamp(42px,6vw,88px)/1.02 var(--serif);letter-spacing:-.018em;text-wrap:balance}
+.title{font:300 clamp(34px,4.4vw,64px)/1.05 var(--serif);letter-spacing:-.012em;text-wrap:balance}
+.lead{font-size:17px;max-width:32rem}
+.small{font-size:15px}
+
+/* ---------- hero ---------- */
+#hero{height:280vh}
+#hero .art{margin:0;position:sticky}
+#heroScene{position:absolute;inset:0;will-change:transform}
+#curtain{position:absolute;top:0;bottom:0;right:-2vw;width:30vw}
+#curtain canvas{position:absolute;inset:0;width:100%;height:100%;transform-origin:50% 0}
+#macro{position:absolute;inset:0;opacity:0}
+.hero-copy{position:absolute;z-index:3;left:0;right:0;bottom:0;top:0;display:flex;align-items:center}
+.hero-copy .wrap>div{max-width:31rem;display:grid;gap:22px}
+.hero-copy .lead{color:rgba(255,255,255,.9)}
+.actions{display:flex;flex-wrap:wrap;gap:10px}
+.macro-line{position:absolute;z-index:3;inset:0;display:grid;place-items:center;text-align:center;padding-left:var(--gut-l);padding-right:var(--gut-r);opacity:0}
+.macro-line p{font:300 italic clamp(28px,3.8vw,56px)/1.18 var(--serif);max-width:18em;text-wrap:balance;text-shadow:0 2px 30px rgba(0,0,0,.35)}
+
+/* ---------- directions (cream) ---------- */
+.dirs{list-style:none;margin:36px 0 0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 36px;max-width:46rem}
+.dirs li{border-top:1px solid rgba(27,29,38,.16);padding:16px 0 18px;display:grid;gap:4px}
+.dirs .nm{display:flex;gap:12px;align-items:baseline;font:400 22px/1.2 var(--serif)}
+.dirs .nm span{font:400 15px var(--serif);color:#9a7426;min-width:2em}
+.dirs p{font-size:14.5px;color:#454856}
+
+/* ---------- levels (lilac) ---------- */
+.levels{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(28px,5vw,80px);margin-top:36px;max-width:60rem}
+.numeral{font:400 clamp(110px,15vw,210px)/.8 var(--serif);letter-spacing:.01em;
+  background:linear-gradient(170deg,#fbe8a8 0%,#d6a640 40%,#87601c 64%,#e6c36d 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.level{display:grid;gap:12px}
+.level h3{font:400 28px/1.15 var(--serif)}
+.level p{color:#3a3c48;font-size:15.5px}
+.level .now{color:#8a2a1f}
+
+/* ---------- week (constellation) ---------- */
+#week{height:300vh}
+#week .art{margin:0}
+#stars{position:absolute;inset:0;width:100%;height:100%;z-index:2}
+#stars .lnk{fill:none;stroke:rgba(255,255,255,.8);stroke-width:1.2}
+#stars .st{fill:#fff;transition:r .35s cubic-bezier(.2,.8,.2,1)}
+#stars .halo{fill:#ffe39a;opacity:0;transition:opacity .4s}
+#stars .on .halo{opacity:.4}
+#stars .day{font:500 13px var(--sans);fill:rgba(255,255,255,.8)}
+.week-copy{position:absolute;z-index:3;left:0;right:0;top:calc(110px + env(safe-area-inset-top, 0px))}
+.week-copy .wrap{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:20px;align-items:end}
+.week-copy .lead{margin-top:14px;color:rgba(255,255,255,.88)}
+.count{font:300 clamp(56px,7vw,104px)/.9 var(--serif);white-space:nowrap;text-align:right}
+.count small{display:block;font:400 14px var(--sans);color:rgba(255,255,255,.75);margin-top:8px}
+
+/* ---------- honest (parchment) ---------- */
+#honest{background:var(--cream)}
+#honest .pin .wrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(28px,5vw,80px);align-items:center}
+#honest .text{display:grid;gap:20px;grid-column:2}
+.facts{display:grid;gap:0;margin-top:10px}
+.facts div{border-top:1px solid rgba(27,29,38,.16);padding:14px 0;display:grid;gap:2px}
+.facts b{font:400 19px/1.3 var(--serif)}
+.facts span{font-size:14.5px;color:#454856}
+
+/* ---------- faq (grove) ---------- */
+.faq-box{max-width:44rem;background:rgba(13,30,102,.62);backdrop-filter:blur(14px) saturate(1.2);-webkit-backdrop-filter:blur(14px) saturate(1.2);
+  border:1px solid rgba(255,255,255,.16);border-radius:22px;padding:clamp(22px,3.4vw,40px)}
+.faq-box .title{margin-bottom:18px}
+details{border-top:1px solid rgba(255,255,255,.2)}
+summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:18px;padding:18px 0;font:400 19px/1.35 var(--serif)}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";flex:none;font:300 26px/1 var(--serif);transition:transform .3s}
+details[open] summary::after{transform:rotate(45deg)}
+details p{padding:0 0 20px;color:rgba(255,255,255,.86);font-size:15.5px;max-width:58ch}
+
+/* ---------- final ---------- */
+#final .pin{align-items:center;text-align:center;padding-block:30vh 14vh}
+#final .wrap{display:grid;justify-items:center;gap:20px}
+.mark{font:300 clamp(64px,12vw,190px)/.9 var(--serif);letter-spacing:-.03em;text-shadow:0 4px 50px rgba(13,30,102,.45)}
+#final .lead{color:rgba(255,255,255,.92);text-shadow:0 1px 18px rgba(13,30,102,.6)}
+.handle{font-size:13px;color:rgba(255,255,255,.8);user-select:all}
+footer{position:relative;z-index:2;background:var(--night);color:rgba(255,255,255,.72);font-size:13px}
+footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px 24px;padding-block:22px calc(22px + env(safe-area-inset-bottom, 0px))}
+footer a{text-decoration:none}
+
+.reveal{will-change:transform,opacity,filter}
+
+/* ---------- small screens ---------- */
+@media (max-width:900px){
+  .links{display:none}
+  .menu-btn{display:inline-flex}
+  .chrome .v2,.chrome .p2,.chrome .p5{display:none}
+  #curtain{width:44vw}
+  .hero-copy{align-items:flex-end}
+  .hero-copy .wrap{padding-bottom:64px}
+  .dirs{grid-template-columns:1fr}
+  .levels{grid-template-columns:1fr}
+  .week-copy .wrap{grid-template-columns:1fr}
+  .count{text-align:left;font-size:48px}
+  .count small{display:inline;margin-left:8px}
+  #honest .pin .wrap{grid-template-columns:1fr}
+  #honest .text{grid-column:1;padding-top:38vh}
+  .pin{align-items:flex-end}
+  #dirs .pin .wrap>div,#levels .pin .wrap>div{background:rgba(239,232,218,.9);border-radius:20px;padding:22px;margin-top:34vh}
+  #levels .pin .wrap>div{background:rgba(236,228,246,.9)}
+}
+@media (max-width:520px){
+  .logo{padding:9px 13px}
+  .actions .cap{flex:1 1 100%;justify-content:center}
+}
+@media (prefers-reduced-motion: reduce){ #stars .st,#stars .halo,.cap{transition:none} }
+</style>
+</head>
+<body>
+<header class="top">
+  <a class="cap logo" href="#hero" data-go="hero">gulhayo.ai</a>
+  <nav class="cap links" data-i18n-aria="navA">
+    <a href="#dirs" data-go="dirs" data-i18n="n1"></a>
+    <a href="#week" data-go="week" data-i18n="n2"></a>
+    <a href="#levels" data-go="levels" data-i18n="n3"></a>
+    <a href="#faq" data-go="faq" data-i18n="n4"></a>
+  </nav>
+  <div class="cap lang" role="group" aria-label="Тил / Язык">
+    <button type="button" data-lang="uz" aria-pressed="true">UZ</button>
+    <button type="button" data-lang="ru" aria-pressed="false">RU</button>
+  </div>
+  <button class="cap menu-btn" id="menuBtn" type="button" aria-expanded="false" aria-controls="menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 8h16M4 16h16"/></svg><span data-i18n="menu"></span></button>
+</header>
+<nav class="menu" id="menu" hidden data-i18n-aria="navA">
+  <button class="cap" id="menuClose" type="button" data-i18n="close"></button>
+  <a href="#dirs" data-go="dirs" data-i18n="n1"></a>
+  <a href="#week" data-go="week" data-i18n="n2"></a>
+  <a href="#levels" data-go="levels" data-i18n="n3"></a>
+  <a href="#faq" data-go="faq" data-i18n="n4"></a>
+  <a href="#final" data-go="final" data-i18n="n5"></a>
+</nav>
+
+<main>
+  <!-- 1 + 2: hero painting, curtain, zoom into cloth, macro weave -->
+  <section class="frame" id="hero">
+    <div class="art">
+      <div id="heroScene"><canvas data-art="hero"></canvas><div id="curtain"><canvas data-art="curtain"></canvas></div></div>
+      <div id="macro"><canvas data-art="macro"></canvas></div>
+      <div class="chrome"><i class="v v1"></i><i class="v v2"></i><i class="v v3"></i><i class="h h1"></i><i class="h h2"></i><b class="p1"></b><b class="p2"></b><b class="p3"></b><b class="p4"></b><b class="p5"></b><b class="p6"></b></div>
+      <div class="hero-copy"><div class="wrap"><div>
+        <h1 class="display" data-i18n="h1"></h1>
+        <p class="lead" data-i18n="sub"></p>
+        <div class="actions">
+          <a class="cap lg" href="https://ig.me/m/gulhayo.ai" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4 20-7z"/></svg><span data-i18n="ctaDirect"></span></a>
+          <a class="cap lg soft" href="#dirs" data-go="dirs"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg><span data-i18n="ctaProgram"></span></a>
+        </div>
+      </div></div></div>
+      <div class="macro-line"><p data-i18n="macro"></p></div>
+    </div>
+  </section>
+
+  <!-- 3: directions on the laurel branch -->
+  <section class="frame light" id="dirs">
+    <div class="art"><canvas data-art="branch"></canvas><div class="chrome"><i class="v v1"></i><i class="v v2"></i><i class="v v3"></i><i class="h h1"></i><i class="h h2"></i><b class="p1"></b><b class="p2"></b><b class="p3"></b><b class="p4"></b><b class="p5"></b><b class="p6"></b></div></div>
+    <div class="content" style="min-height:170vh"><div class="pin"><div class="wrap"><div>
+      <h2 class="title reveal" data-i18n="dirH"></h2>
+      <p class="lead reveal" style="margin-top:14px;color:#454856" data-i18n="dirP"></p>
+      <ul class="dirs" id="dirList"></ul>
+    </div></div></div></div>
+  </section>
+
+  <!-- 4: levels on lilac with green velvet -->
+  <section class="frame light" id="levels">
+    <div class="art"><canvas data-art="lilac"></canvas><div class="chrome"><i class="v v1"></i><i class="v v2"></i><i class="v v3"></i><i class="h h1"></i><i class="h h2"></i><b class="p1"></b><b class="p2"></b><b class="p3"></b><b class="p4"></b><b class="p5"></b><b class="p6"></b></div></div>
+    <div class="content" style="min-height:160vh"><div class="pin"><div class="wrap"><div>
+      <h2 class="title reveal" data-i18n="lvH"></h2>
+      <div class="levels">
+        <article class="level reveal"><div class="numeral" aria-hidden="true">III</div><h3>Master AI 3.0</h3><p data-i18n="lv3"></p><p class="now" data-i18n="lv3now"></p></article>
+        <article class="level reveal"><div class="numeral" aria-hidden="true">IV</div><h3>Master AI 4.0</h3><p data-i18n="lv4"></p><p class="now" data-i18n="lv4now"></p></article>
+      </div>
+    </div></div></div></div>
+  </section>
+
+  <!-- 7: the week as a constellation -->
+  <section class="frame" id="week">
+    <div class="art">
+      <canvas data-art="night"></canvas>
+      <div class="chrome"><i class="v v1"></i><i class="v v2"></i><i class="v v3"></i><i class="h h1"></i><i class="h h2"></i><b class="p1"></b><b class="p2"></b><b class="p3"></b><b class="p4"></b><b class="p5"></b><b class="p6"></b></div>
+      <svg id="stars" role="img" data-i18n-aria="starsA"></svg>
+      <div class="week-copy"><div class="wrap">
+        <div><h2 class="title" data-i18n="wkH"></h2><p class="lead" data-i18n="wkP"></p></div>
+        <div class="count" aria-live="polite"><span id="countN">0</span>&thinsp;/&thinsp;14<small data-i18n="wkC"></small></div>
+      </div></div>
+    </div>
+  </section>
+
+  <!-- 6: honesty on parchment -->
+  <section class="frame light" id="honest">
+    <div class="art"><canvas data-art="parchment"></canvas><div class="chrome"><i class="v v1"></i><i class="v v2"></i><i class="v v3"></i><i class="h h1"></i><i class="h h2"></i><b class="p1"></b><b class="p2"></b><b class="p3"></b><b class="p4"></b><b class="p5"></b><b class="p6"></b></div></div>
+    <div class="content" style="min-height:150vh"><div class="pin"><div class="wrap"><div class="text">
+      <h2 class="title reveal" data-i18n="hoH"></h2>
+      <p class="lead reveal" style="color:#3a3c48" data-i18n="hoP"></p>
+      <div class="facts reveal">
+        <div><b data-i18n="f1h"></b><span data-i18n="f1p"></span></div>
+        <div><b data-i18n="f2h"></b><span data-i18n="f2p"></span></div>
+        <div><b data-i18n="f3h"></b><span data-i18n="f3p"></span></div>
+      </div>
+    </div></div></div></div>
+  </section>
+
+  <!-- 5: FAQ in the grove -->
+  <section class="frame" id="faq">
+    <div class="art"><canvas data-art="grove"></canvas><div class="chrome"><i class="v v1"></i><i class="v v2"></i><i class="v v3"></i><i class="h h1"></i><i class="h h2"></i><b class="p1"></b><b class="p2"></b><b class="p3"></b><b class="p4"></b><b class="p5"></b><b class="p6"></b></div></div>
+    <div class="content" style="min-height:150vh"><div class="pin"><div class="wrap">
+      <div class="faq-box reveal"><h2 class="title" data-i18n="faqH"></h2><div data-i18n="faqList"></div></div>
+    </div></div></div>
+  </section>
+
+  <!-- 8: finale -->
+  <section class="frame" id="final">
+    <div class="art"><canvas data-art="finale"></canvas><div class="chrome"><i class="v v1"></i><i class="v v2"></i><i class="v v3"></i><i class="h h1"></i><i class="h h2"></i><b class="p1"></b><b class="p2"></b><b class="p3"></b><b class="p4"></b><b class="p5"></b><b class="p6"></b></div></div>
+    <div class="content"><div class="pin"><div class="wrap">
+      <div class="mark reveal" aria-hidden="true">gulhayo.ai</div>
+      <h2 class="title reveal" style="font-size:clamp(26px,3vw,40px)" data-i18n="fiH"></h2>
+      <p class="lead reveal" data-i18n="fiP"></p>
+      <div class="actions reveal" style="justify-content:center">
+        <a class="cap lg" href="https://ig.me/m/gulhayo.ai" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4 20-7z"/></svg><span data-i18n="ctaDirect"></span></a>
+        <a class="cap lg soft" href="https://www.instagram.com/gulhayo.ai/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg><span>Instagram</span></a>
+      </div>
+      <p class="handle">@gulhayo.ai</p>
+    </div></div></div>
+  </section>
+</main>
+<footer><div class="wrap"><span data-i18n="foot"></span><a href="https://www.instagram.com/gulhayo.ai/" target="_blank" rel="noopener">Instagram @gulhayo.ai</a></div></footer>
+
+<script>
+/* ---------- language layer (UZ Cyrillic default, RU on demand) ---------- */
+window.I18N=(function(){
+const D={
+uz:{navA:'Бўлимлар',n1:'Дастур',n2:'Ҳафта',n3:'Даражалар',n4:'Саволлар',n5:'Ёзилиш',menu:'Меню',close:'Ёпиш',
+ h1:'Эътибор тортадиган ИИ-видеолар олинг',
+ sub:'Master AI: Гулҳаёнинг ИИ-видео, шахсий бренд ва Instagram’да ўсиш бўйича курси. Ҳозир 3-поток давом этмоқда.',
+ ctaDirect:'Direct’га ёзиш',ctaProgram:'Дастурни кўриш',
+ macro:'Маҳорат ҳар куни видео олиш одатидан бошланади.',
+ dirH:'Олтита йўналиш',dirP:'Аввал ролик тайёрлаш ва блог юритишни ўрганасиз, кейин кўникмани мижозлар учун хизматга айлантирасиз.',
+ lvH:'Икки даража',
+ lv3:'Асос: ИИ-видео, шахсий бренд, Instagram’да ўсиш ва ҳар кунги амалиёт. Якуний дарс ChatPlace ИИ-агенти ва монетизацияга бағишланган.',lv3now:'Ҳозир 3-поток давом этмоқда.',
+ lv4:'Тахминан олтита дарс: мижозлар ва даромад, ИИ-слайдлар, таргет реклама, Claude билан сайтлар ва видео монтаж.',lv4now:'3.0 ни тугатганлар учун.',
+ starsA:'Ҳафта юлдуз туркуми: кунига иккитадан, 14 та ролик',
+ wkH:'Курсдаги ҳафтангиз: 14 та ролик',wkP:'Биринчи ҳафтадан Instagram, TikTok, YouTube ва Telegram-каналингизга ҳар куни иккитадан ролик жойлайсиз. Ҳар бир юлдуз битта ролик.',wkC:'ҳафталик роликлар',
+ days:['Ду','Се','Чо','Па','Жу','Ша','Як'],
+ hoH:'Даромадни ваъда қилмаймиз. Ҳар куни амалиёт қиламиз.',
+ hoP:'Нархлар ва кафолатлар йўқ. Курс кўникма ва интизом беради, натижа эса қанча видео олиб жойлашингизга боғлиқ.',
+ f1h:'Ҳар бир дарсга тақдимот',f1p:'Қадамлар, промптлар ва мисоллар ўзбек тилидаги слайдларда.',
+ f2h:'Telegram’да поток гуруҳи',f2p:'Саволлар, танловлар ва ким нечта ролик қилгани кўриниб туради.',
+ f3h:'Санаси ва шартлари Direct’да',f3p:'Гулҳаё уларни шахсан айтади: @gulhayo.ai.',
+ faqH:'Ёзилишдан олдин сўрашади',
+ faqList:'<details open><summary>Нейросеть билан тажриба керакми?</summary><p>Йўқ. Master AI 3.0 асослардан бошланади, мураккаб мавзулар 4.0 даражасида.</p></details><details><summary>Дарслар қайси тилда?</summary><p>Машғулотлар ва тақдимотлар ўзбек тилида, слайдлар кирилл алифбосида.</p></details><details><summary>Уй вазифаси қандай?</summary><p>Instagram, TikTok, YouTube ва Telegram’га ҳар куни иккитадан ролик, ҳафтасига 14 та. Вазифалар поток Telegram-гуруҳида топширилади.</p></details><details><summary>Даромадни кафолатлайсизми?</summary><p>Йўқ. Натижа сизнинг меҳнатингизга боғлиқ. Мижозлар ва даромадга 4.0 даражаси бағишланган.</p></details><details><summary>Нархи қанча, кейинги поток қачон?</summary><p>Санаси ва шартларини Гулҳаё шахсан айтади. Direct’га ёзинг: @gulhayo.ai.</p></details>',
+ fiH:'Кейинги потокка ёзилинг',fiP:'Нима билан шуғулланишингиз ва қандай видеолар олмоқчи эканингизни Direct’га ёзинг.',
+ foot:'© 2026 gulhayo.ai'},
+ru:{navA:'Разделы',n1:'Программа',n2:'Неделя',n3:'Уровни',n4:'Вопросы',n5:'Записаться',menu:'Меню',close:'Закрыть',
+ h1:'Снимайте ИИ-видео, которые замечают',
+ sub:'Master AI: курс Гульхайо по ИИ-видео, личному бренду и росту в Instagram. Сейчас идёт 3-й поток.',
+ ctaDirect:'Написать в Direct',ctaProgram:'Смотреть программу',
+ macro:'Мастерство начинается с привычки снимать каждый день.',
+ dirH:'Шесть направлений',dirP:'Сначала вы учитесь делать ролики и вести блог, затем превращаете навык в услугу для клиентов.',
+ lvH:'Два уровня',
+ lv3:'Основа: ИИ-видео, личный бренд, рост в Instagram и ежедневная практика. Финальный урок про ИИ-агента ChatPlace и монетизацию.',lv3now:'Сейчас идёт 3-й поток.',
+ lv4:'Около шести уроков: клиенты и заработок, ИИ-слайды, таргет, сайты с Claude и монтаж видео.',lv4now:'Для выпускников 3.0.',
+ starsA:'Созвездие недели: 14 роликов, по два в день',
+ wkH:'Ваша неделя на курсе: 14 роликов',wkP:'С первой недели вы выкладываете по два ролика в день в Instagram, TikTok, YouTube и Telegram. Каждая звезда здесь один ролик.',wkC:'роликов за неделю',
+ days:['Пн','Вт','Ср','Чт','Пт','Сб','Вс'],
+ hoH:'Без обещаний дохода. С практикой каждый день.',
+ hoP:'Здесь нет цен и гарантий. Курс даёт навык и дисциплину, а результат зависит от того, сколько вы снимаете и выкладываете.',
+ f1h:'Презентация к каждому уроку',f1p:'Шаги, промпты и примеры на слайдах на узбекском языке.',
+ f2h:'Группа потока в Telegram',f2p:'Вопросы, конкурсы и видно, кто сколько роликов сделал.',
+ f3h:'Даты и условия в Direct',f3p:'Гульхайо сообщает их лично: @gulhayo.ai.',
+ faqH:'Спрашивают до записи',
+ faqList:'<details open><summary>Нужен ли опыт с нейросетями?</summary><p>Нет. Master AI 3.0 начинается с основ, продвинутые темы идут на уровне 4.0.</p></details><details><summary>На каком языке уроки?</summary><p>Занятия и презентации на узбекском языке, слайды в кириллице.</p></details><details><summary>Какое домашнее задание?</summary><p>По два ролика в день в Instagram, TikTok, YouTube и Telegram, 14 в неделю. Задания сдаются в Telegram-группе потока.</p></details><details><summary>Гарантируете ли вы заработок?</summary><p>Нет. Результат зависит от вашей работы. Клиентам и заработку посвящён уровень 4.0.</p></details><details><summary>Сколько стоит и когда следующий поток?</summary><p>Даты и условия Гульхайо сообщает лично. Напишите в Direct @gulhayo.ai.</p></details>',
+ fiH:'Запишитесь на следующий поток',fiP:'Напишите в Direct, чем занимаетесь и что хотите снимать.',
+ foot:'© 2026 gulhayo.ai'}};
+const DIRS={
+ uz:[['III','ИИ-видео','Промптдан тайёр 9:16 Reels’гача: Veo 3, Higgsfield, монтаж.'],['III','Шахсий бренд','Нима ҳақида олиш, кадрда гапириш ва ягона услуб.'],['III','Instagram’да ўсиш','Reels, хук, изоҳлар; TikTok, YouTube ва Telegram ҳам.'],['III','Direct’да ИИ-агент','ChatPlace автожавобчиси ва Instagram монетизацияси.'],['IV','Мижозлар ва даромад','Мижоз топиш, ИИ-видео ва слайдлар, таргет реклама.'],['IV','Claude билан сайтлар','Мана шунга ўхшаш сайтлар ва уларга видео монтаж.']],
+ ru:[['III','ИИ-видео','От промпта до готового Reels 9:16: Veo 3, Higgsfield, монтаж.'],['III','Личный бренд','О чём снимать, как говорить в кадре, единый стиль.'],['III','Рост в Instagram','Reels, хук, подписи; плюс TikTok, YouTube и Telegram.'],['III','ИИ-агент в Direct','Автоответчик ChatPlace и монетизация Instagram.'],['IV','Клиенты и заработок','Поиск клиентов, ИИ-видео и слайды, таргет.'],['IV','Сайты с Claude','Сайты вроде этого и монтаж видео к ним.']]};
+let lang='uz'; try{const s=localStorage.getItem('gulhayo-lang'); if(s==='ru'||s==='uz') lang=s;}catch(e){}
+const subs=[]; const t=k=>D[lang][k]!=null?D[lang][k]:D.ru[k];
+function apply(){
+  document.documentElement.lang=lang==='uz'?'uz-Cyrl':'ru';
+  document.querySelectorAll('[data-i18n]').forEach(el=>{el.innerHTML=t(el.dataset.i18n);});
+  document.querySelectorAll('[data-i18n-aria]').forEach(el=>el.setAttribute('aria-label',t(el.dataset.i18nAria)));
+  document.querySelectorAll('.lang button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.lang===lang)));
+  document.getElementById('dirList').innerHTML=DIRS[lang].map(([lv,n,p])=>`<li class="reveal"><span class="nm"><span>${lv}</span>${n}</span><p>${p}</p></li>`).join('');
+}
+function set(l){if(l===lang)return;lang=l;try{localStorage.setItem('gulhayo-lang',l);}catch(e){}apply();subs.forEach(f=>f());}
+apply();
+document.querySelectorAll('.lang button').forEach(b=>b.addEventListener('click',()=>set(b.dataset.lang)));
+return {t,on:f=>subs.push(f)};
+})();
+</script>
+
+<script>
+/* ---------- the paintings ----------
+   Every frame is painted in code. To use your own AI paintings, put image URLs here (16:9 for desktop, 9:16 for phones)
+   and the canvas for that frame is replaced by the image. */
+window.PAINTINGS={hero:null,macro:null,branch:null,lilac:null,night:null,parchment:null,grove:null,finale:null};
+
+window.ART=(function(){
+const rng=s=>()=>{s=(s*16807)%2147483647;return (s-1)/2147483646;};
+const lerp=(a,b,t)=>a+(b-a)*t;
+const rgb=(c,a=1)=>`rgba(${c[0]|0},${c[1]|0},${c[2]|0},${a})`;
+function grain(g,w,h,r,n,alpha,cols){for(let i=0;i<n;i++){const x=r()*w,y=r()*h,l=8+r()*40;g.strokeStyle=rgb(cols[(r()*cols.length)|0],alpha*r());g.lineWidth=1+r()*2.5;g.beginPath();g.moveTo(x,y);g.lineTo(x+l,y+(r()-.5)*l*.3);g.stroke();}}
+function sky(g,w,h,r,o={}){
+  const top=o.top||[16,44,150], mid=o.mid||[29,67,196], low=o.low||[118,160,234];
+  const gr=g.createLinearGradient(0,0,0,h); gr.addColorStop(0,rgb(top)); gr.addColorStop(.55,rgb(mid)); gr.addColorStop(1,rgb(low));
+  g.fillStyle=gr; g.fillRect(0,0,w,h);
+  grain(g,w,h,r,(w*h)/2600,.05,[[255,255,255],[10,30,110],[60,100,220]]);
+  const n=o.clouds==null?5:o.clouds;
+  for(let c=0;c<n;c++){
+    const cx=o.cx?o.cx(c,r):r()*w, cy=h*lerp(o.cyMin||.55,o.cyMax||.95,r()), s=Math.min(w,h)*lerp(.05,.11,r())*(o.scale||1);
+    cloud(g,cx,cy,s,r);
+  }
+}
+function cloud(g,cx,cy,s,r){
+  const puffs=[]; for(let i=0;i<14;i++) puffs.push([cx+(r()-.5)*s*3.4,cy+(r()-.6)*s*.9,s*lerp(.45,1,r())]);
+  puffs.forEach(([x,y,rr])=>{const gg=g.createRadialGradient(x,y+rr*.35,0,x,y+rr*.35,rr*1.1);gg.addColorStop(0,'rgba(150,170,215,.55)');gg.addColorStop(1,'rgba(150,170,215,0)');g.fillStyle=gg;g.beginPath();g.arc(x,y+rr*.35,rr*1.1,0,7);g.fill();});
+  puffs.forEach(([x,y,rr])=>{const gg=g.createRadialGradient(x-rr*.2,y-rr*.3,0,x,y,rr);gg.addColorStop(0,'rgba(255,255,255,.98)');gg.addColorStop(.6,'rgba(244,247,253,.85)');gg.addColorStop(1,'rgba(225,233,250,0)');g.fillStyle=gg;g.beginPath();g.arc(x,y,rr,0,7);g.fill();});
+}
+function leaf(g,x,y,ang,L,W,c1,c2,c3){
+  g.save();g.translate(x,y);g.rotate(ang);
+  const gr=g.createLinearGradient(-W,0,W,0);gr.addColorStop(0,c1);gr.addColorStop(.5,c2);gr.addColorStop(1,c3);
+  g.fillStyle=gr;g.beginPath();g.moveTo(0,0);g.quadraticCurveTo(W*1.1,-L*.45,0,-L);g.quadraticCurveTo(-W*1.1,-L*.45,0,0);g.fill();
+  g.strokeStyle='rgba(60,40,10,.35)';g.lineWidth=Math.max(.6,W*.08);g.beginPath();g.moveTo(0,0);g.quadraticCurveTo(W*.1,-L*.5,0,-L*.92);g.stroke();
+  g.restore();
+}
+const GOLD=['#8a5c14','#f4d98e','#a8741e'];
+function wreath(g,cx,cy,R,r){
+  [-1,1].forEach(side=>{
+    g.strokeStyle='#9a6a1c';g.lineWidth=R*.025;g.beginPath();
+    for(let s=0;s<=1.001;s+=.02){const a=-Math.PI/2+side*(.05+s*.86)*Math.PI;const x=cx+R*Math.cos(a),y=cy-R*Math.sin(a);s?g.lineTo(x,y):g.moveTo(x,y);}g.stroke();
+    for(let k=0;k<16;k++){
+      const s=.05+k*.055, a=-Math.PI/2+side*(.05+s*.86)*Math.PI, x=cx+R*Math.cos(a), y=cy-R*Math.sin(a);
+      const tang=Math.atan2(-Math.cos(a)*side,-Math.sin(a)*side); // direction of growth (screen)
+      const size=1-.4*(k/16), L=R*.36*size, W=L*.3;
+      leaf(g,x,y,tang+Math.PI/2-.75*side+ (r()-.5)*.15,L,W,...GOLD);
+      leaf(g,x,y,tang+Math.PI/2+.75*side+(r()-.5)*.15,L*.92,W,...GOLD);
+      if(k%3===1){const bx=x+Math.cos(a)*R*.08,by=y-Math.sin(a)*R*.08;const bg=g.createRadialGradient(bx-R*.01,by-R*.01,0,bx,by,R*.04);bg.addColorStop(0,'#fff1bf');bg.addColorStop(1,'#a8741e');g.fillStyle=bg;g.beginPath();g.arc(bx,by,R*.035,0,7);g.fill();}
+    }
+  });
+  // ribbon bow
+  const by=cy+R; g.fillStyle='#a3271d'; g.strokeStyle='#6e160f'; g.lineWidth=R*.012;
+  [-1,1].forEach(sd=>{g.beginPath();g.ellipse(cx+sd*R*.11,by-R*.01,R*.11,R*.06,sd*.4,0,7);g.fill();g.stroke();
+    g.beginPath();g.moveTo(cx,by);g.bezierCurveTo(cx+sd*R*.08,by+R*.2,cx+sd*R*.02,by+R*.35,cx+sd*R*.18,by+R*.52);g.lineTo(cx+sd*R*.25,by+R*.47);g.bezierCurveTo(cx+sd*R*.1,by+R*.32,cx+sd*R*.16,by+R*.18,cx+sd*R*.05,by);g.fill();});
+  g.beginPath();g.arc(cx,by,R*.05,0,7);g.fill();
+}
+function marbleBlock(g,x,y,w,h,r){
+  const gr=g.createLinearGradient(x,0,x+w,0);gr.addColorStop(0,'#c9c4bb');gr.addColorStop(.35,'#f6f3ec');gr.addColorStop(.75,'#ebe6dc');gr.addColorStop(1,'#b8b2a8');
+  g.fillStyle=gr;g.fillRect(x,y,w,h);
+  g.save();g.beginPath();g.rect(x,y,w,h);g.clip();
+  for(let i=0;i<18;i++){g.strokeStyle=`rgba(120,112,100,${.08+r()*.12})`;g.lineWidth=.6+r()*1.6;g.beginPath();let px=x+r()*w,py=y+r()*h;g.moveTo(px,py);for(let k=0;k<4;k++){px+=(r()-.3)*w*.25;py+=(r()-.5)*h*.2;g.lineTo(px,py);}g.stroke();}
+  g.restore();
+}
+/* 1. hero: sky, marble plinth, golden laurel */
+function hero(g,w,h,narrow){
+  const r=rng(7);
+  sky(g,w,h,r,{clouds:narrow?2:4,cyMin:.7,cyMax:.98,cx:(c,rr)=>narrow?w*(.1+rr()*.5):w*(.38+rr()*.3)});
+  if(narrow){
+    // phone: wreath floats above the text, no plinth behind the words
+    const R=w*.2; wreath(g,w*.4,h*.25,R,r);
+    const fade=g.createLinearGradient(0,h*.45,0,h);fade.addColorStop(0,'rgba(13,30,102,0)');fade.addColorStop(1,'rgba(13,30,102,.75)');g.fillStyle=fade;g.fillRect(0,0,w,h);
+    return;
+  }
+  const cx=w*.585, base=h*.8, pw=w*.15;
+  g.fillStyle='rgba(10,25,90,.25)';g.beginPath();g.ellipse(cx,base+4,pw*.75,h*.02,0,0,7);g.fill();
+  marbleBlock(g,cx-pw*.5,base,pw,h-base,r);
+  marbleBlock(g,cx-pw*.6,base-h*.03,pw*1.2,h*.035,r);
+  const R=Math.min(w,h)*.17;
+  wreath(g,cx,base-h*.06-R*1.55,R,r);
+}
+/* curtain: heavy blue-grey velvet with folds, gathered at the top */
+function curtain(g,w,h,base=[78,92,120]){
+  const r=rng(19);
+  const edge=y=>w*.06+Math.sin(y/h*9)*w*.02+Math.sin(y/h*23)*w*.008;
+  // shadow cast on the painting
+  const sh=g.createLinearGradient(0,0,w*.18,0);sh.addColorStop(0,'rgba(5,15,60,0)');sh.addColorStop(1,'rgba(5,15,60,.45)');
+  g.fillStyle=sh;g.fillRect(0,0,w*.18,h);
+  for(let x=0;x<w;x++){
+    const u=x/w;
+    const f=.5+.22*Math.sin(u*Math.PI*2*5.2+.6)+.18*Math.sin(u*Math.PI*2*11.3+1.7)+.1*Math.sin(u*Math.PI*2*23+.3);
+    const light=Math.pow(Math.max(0,f),1.6)*1.25+.12;
+    const gr=g.createLinearGradient(0,0,0,h);
+    const c=base.map(v=>Math.min(255,v*light));
+    gr.addColorStop(0,rgb(c.map(v=>v*.55)));gr.addColorStop(.12,rgb(c));gr.addColorStop(.85,rgb(c.map(v=>v*.92)));gr.addColorStop(1,rgb(c.map(v=>v*.6)));
+    g.fillStyle=gr;
+    // left edge is wavy: only paint where x is past the edge for that band
+    g.fillRect(x,0,1,h);
+  }
+  // cut the wavy left edge back to the shadow
+  g.globalCompositeOperation='destination-out';
+  g.beginPath();g.moveTo(0,0);for(let y=0;y<=h;y+=8)g.lineTo(edge(y),y);g.lineTo(0,h);g.closePath();g.fill();
+  g.globalCompositeOperation='source-over';
+  const sh2=g.createLinearGradient(0,0,w*.22,0);sh2.addColorStop(0,'rgba(5,15,60,.35)');sh2.addColorStop(1,'rgba(5,15,60,0)');
+  g.globalCompositeOperation='destination-over';g.fillStyle=sh2;g.fillRect(0,0,w*.22,h);g.globalCompositeOperation='source-over';
+  // velvet nap
+  for(let i=0;i<w*h/60;i++){const x=edge(0)+r()*w,y=r()*h;g.fillStyle=`rgba(255,255,255,${r()*.035})`;g.fillRect(x,y,1,2+r()*4);}
+}
+/* 2. macro: the curtain cloth up close */
+function macro(g,w,h){
+  const r=rng(23), s=Math.max(10,Math.round(Math.min(w,h)/70));
+  g.fillStyle='#2c3550';g.fillRect(0,0,w,h);
+  for(let y=0,row=0;y<h+s;y+=s,row++){
+    for(let x=0,col=0;x<w+s;x+=s,col++){
+      const over=(row+col)%2===0, j=(r()-.5)*.12, L=.62+j;
+      const c=[86*L,100*L,132*L];
+      g.fillStyle=rgb(c);
+      if(over){g.beginPath();g.ellipse(x+s/2,y+s/2,s*.62,s*.36,0,0,7);g.fill();g.fillStyle='rgba(255,255,255,.12)';g.fillRect(x+s*.15,y+s*.38,s*.7,s*.1);}
+      else{g.beginPath();g.ellipse(x+s/2,y+s/2,s*.36,s*.62,0,0,7);g.fill();g.fillStyle='rgba(255,255,255,.1)';g.fillRect(x+s*.42,y+s*.15,s*.1,s*.7);}
+    }
+  }
+  // large soft folds
+  for(let i=0;i<5;i++){const x0=(i/5+r()*.1)*w;const gr=g.createLinearGradient(x0-w*.12,0,x0+w*.12,h*.3);gr.addColorStop(0,'rgba(5,10,40,0)');gr.addColorStop(.5,'rgba(5,10,40,.35)');gr.addColorStop(1,'rgba(5,10,40,0)');g.fillStyle=gr;g.fillRect(0,0,w,h);}
+  const v=g.createRadialGradient(w/2,h/2,Math.min(w,h)*.2,w/2,h/2,Math.max(w,h)*.75);v.addColorStop(0,'rgba(0,0,0,0)');v.addColorStop(1,'rgba(0,0,20,.55)');g.fillStyle=v;g.fillRect(0,0,w,h);
+}
+/* 3. a laurel branch tied with a golden ribbon, on cream */
+function branch(g,w,h,narrow){
+  const r=rng(31);
+  const gr=g.createRadialGradient(w*.7,h*.45,0,w*.7,h*.45,Math.max(w,h));gr.addColorStop(0,'#f7f1e4');gr.addColorStop(1,'#e2d8c2');g.fillStyle=gr;g.fillRect(0,0,w,h);
+  grain(g,w,h,r,(w*h)/2200,.05,[[255,255,255],[150,130,100]]);
+  const x0=narrow?w*.02:w*.5, y0=narrow?h*.42:h*.98, x1=narrow?w*1.02:w*1.02, y1=narrow?h*.04:h*.08;
+  const P=t=>[lerp(x0,x1,t)+Math.sin(t*3)*w*.03, lerp(y0,y1,t)+Math.sin(t*5)*h*.02];
+  g.strokeStyle='#6b4a2a';g.lineCap='round';
+  for(let i=0;i<3;i++){g.lineWidth=(narrow?7:12)-i*3;g.strokeStyle=['#5a3d22','#7a5634','#9c7650'][i];g.beginPath();for(let t=0;t<=1.001;t+=.02){const [x,y]=P(t);t?g.lineTo(x,y):g.moveTo(x,y);}g.stroke();}
+  const scale=narrow?.7:1;
+  for(let k=1;k<26;k++){const t=k/26,[x,y]=P(t),[x2,y2]=P(t+.01),ang=Math.atan2(y2-y,x2-x);
+    const L=(narrow?w*.12:h*.13)*(1-.35*t)*scale, W=L*.26;
+    leaf(g,x,y,ang+Math.PI/2+.9+(r()-.5)*.2,L,W,'#3c4a1d','#9fb06a','#56652a');
+    leaf(g,x,y,ang+Math.PI/2-.9+(r()-.5)*.2,L*.95,W,'#3c4a1d','#93a55f','#4d5b24');}
+  // golden ribbon wrapped around
+  const [rx,ry]=P(.32);g.save();g.translate(rx,ry);
+  for(let i=0;i<4;i++){g.fillStyle=i%2?'#c48f2c':'#efd283';g.save();g.rotate(-.9+i*.08);g.fillRect(-14*scale,-3*scale+i*7*scale,28*scale,6*scale);g.restore();}
+  g.fillStyle='#d9ac4a';g.beginPath();g.moveTo(0,0);g.bezierCurveTo(30*scale,40*scale,10*scale,80*scale,46*scale,120*scale);g.lineTo(56*scale,112*scale);g.bezierCurveTo(24*scale,76*scale,40*scale,40*scale,8*scale,-4*scale);g.fill();
+  g.restore();
+  g.fillStyle='rgba(80,60,30,.08)';g.beginPath();g.ellipse(narrow?w*.5:w*.78,narrow?h*.46:h*.95,w*.25,h*.03,0,0,7);g.fill();
+}
+/* 4. lilac backdrop with draped green velvet */
+function lilac(g,w,h,narrow){
+  const r=rng(41);
+  const gr=g.createLinearGradient(0,0,w,h);gr.addColorStop(0,'#e9e1f4');gr.addColorStop(1,'#c7b6e3');g.fillStyle=gr;g.fillRect(0,0,w,h);
+  grain(g,w,h,r,(w*h)/2400,.05,[[255,255,255],[120,90,160]]);
+  const c=document.createElement('canvas');const cw=Math.round(narrow?h*.16:h*.22),ch=Math.round(Math.max(w,h)*1.2);c.width=cw;c.height=ch;curtain(c.getContext('2d'),cw,ch,[52,96,66]);
+  g.save();g.translate(narrow?w*1.02:w*1.06,narrow?-h*.02:-h*.04);g.rotate(Math.PI*.28);g.drawImage(c,-cw/2,-ch/2);g.restore();
+}
+/* 7. night-blue sky for the constellation */
+function night(g,w,h){const r=rng(53);sky(g,w,h,r,{top:[8,20,82],mid:[18,46,150],low:[60,100,200],clouds:4,cyMin:.82,cyMax:1.02,scale:1.2});
+  for(let i=0;i<220;i++){g.fillStyle=`rgba(255,255,255,${r()*.5})`;g.beginPath();g.arc(r()*w,r()*h*.8,r()*1.3,0,7);g.fill();}}
+/* 6. parchment plan of an academy with a gold medallion */
+function parchment(g,w,h,narrow){
+  const r=rng(61);
+  g.fillStyle='#efe8da';g.fillRect(0,0,w,h);grain(g,w,h,r,(w*h)/2600,.04,[[150,130,100],[255,255,255]]);
+  const S=narrow?Math.min(w*.86,h*.36):Math.min(w*.4,h*.74), cx=narrow?w*.5:w*.27, cy=narrow?h*.24:h*.53;
+  g.save();g.translate(cx,cy);g.rotate(-.05);
+  // torn paper
+  g.shadowColor='rgba(60,40,10,.35)';g.shadowBlur=30;g.shadowOffsetY=12;
+  g.beginPath();const pts=40;for(let i=0;i<=pts*4;i++){const side=(i/pts)|0,t=(i%pts)/pts;let x,y;const j=()=>(r()-.5)*S*.025;
+    if(side===0){x=-S/2+S*t;y=-S/2+j();}else if(side===1){x=S/2+j();y=-S/2+S*t;}else if(side===2){x=S/2-S*t;y=S/2+j();}else{x=-S/2+j();y=S/2-S*t;}
+    i?g.lineTo(x,y):g.moveTo(x,y);}
+  g.closePath();const pg=g.createRadialGradient(0,0,S*.1,0,0,S*.75);pg.addColorStop(0,'#f2e2bd');pg.addColorStop(1,'#cfb383');g.fillStyle=pg;g.fill();
+  g.shadowColor='transparent';
+  for(let i=0;i<10;i++){const sx=(r()-.5)*S*.8,sy=(r()-.5)*S*.8,sr=S*(.05+r()*.12);const st=g.createRadialGradient(sx,sy,0,sx,sy,sr);st.addColorStop(0,'rgba(140,100,50,.18)');st.addColorStop(1,'rgba(140,100,50,0)');g.fillStyle=st;g.fillRect(sx-sr,sy-sr,sr*2,sr*2);}
+  g.strokeStyle='rgba(70,48,25,.85)';g.lineWidth=Math.max(1,S*.004);
+  [.4,.31,.2].forEach((k,i)=>{g.lineWidth=Math.max(1,S*(i===0?.007:.004));g.strokeRect(-S*k,-S*k,S*k*2,S*k*2);});
+  // colonnade
+  g.fillStyle='rgba(70,48,25,.85)';
+  for(let i=0;i<12;i++){const t=-.27+i*.049;[[t,-.27],[t,.27],[-.27,t],[.27,t]].forEach(([a,b])=>{g.beginPath();g.arc(a*S,b*S,S*.008,0,7);g.fill();});}
+  // hatched walls
+  g.save();g.beginPath();g.rect(-S*.4,-S*.4,S*.8,S*.09);g.rect(-S*.4,S*.31,S*.8,S*.09);g.clip();g.lineWidth=1;
+  for(let x=-S*.5;x<S*.5;x+=S*.012){g.beginPath();g.moveTo(x,-S*.5);g.lineTo(x+S*.2,S*.5);g.stroke();}g.restore();
+  // steps
+  for(let i=0;i<6;i++){g.beginPath();g.moveTo(-S*.08,S*.4+i*S*.012);g.lineTo(S*.08,S*.4+i*S*.012);g.stroke();}
+  // radial lines + dimension ticks
+  g.setLineDash([S*.01,S*.008]);g.beginPath();g.moveTo(-S*.45,0);g.lineTo(S*.45,0);g.moveTo(0,-S*.45);g.lineTo(0,S*.45);g.stroke();g.setLineDash([]);
+  // gold medallion
+  const mg=g.createRadialGradient(-S*.03,-S*.04,0,0,0,S*.12);mg.addColorStop(0,'#fff3c4');mg.addColorStop(.35,'#e2b552');mg.addColorStop(.8,'#9a6a1c');mg.addColorStop(1,'#6b4510');
+  g.shadowColor='rgba(60,40,10,.4)';g.shadowBlur=18;g.fillStyle=mg;g.beginPath();g.arc(0,0,S*.11,0,7);g.fill();g.shadowColor='transparent';
+  g.strokeStyle='rgba(255,240,200,.6)';g.lineWidth=S*.004;g.beginPath();g.arc(0,0,S*.085,0,7);g.stroke();
+  // a play mark engraved in the medallion: this academy teaches video
+  g.fillStyle='rgba(110,70,15,.75)';g.beginPath();g.moveTo(-S*.025,-S*.038);g.lineTo(S*.042,0);g.lineTo(-S*.025,S*.038);g.closePath();g.fill();
+  g.restore();
+}
+/* 5. olive grove with golden fruit, leaving the middle open */
+function grove(g,w,h,narrow){
+  const r=rng(71);
+  sky(g,w,h,r,{clouds:3,cyMin:.35,cyMax:.6});
+  const branchFrom=(x,y,ang,len,depth)=>{
+    const x2=x+Math.cos(ang)*len,y2=y+Math.sin(ang)*len;
+    g.strokeStyle='#4b3524';g.lineWidth=Math.max(1.5,depth*3.2);g.lineCap='round';g.beginPath();g.moveTo(x,y);g.quadraticCurveTo((x+x2)/2+(r()-.5)*len*.3,(y+y2)/2+(r()-.5)*len*.3,x2,y2);g.stroke();
+    const n=Math.round(len/14);
+    for(let i=0;i<n;i++){const t=i/n,px=lerp(x,x2,t),py=lerp(y,y2,t),L=lerp(20,46,r())*(narrow?.8:1),a=ang+(r()<.5?1:-1)*(.6+r()*.6);
+      const silver=r()<.35; leaf(g,px,py,a+Math.PI/2,L,L*.18,silver?'#7c8a6a':'#2f3f1d',silver?'#c4cdb0':'#7d965a',silver?'#9aa585':'#3f5326');
+      if(r()<.12){const fx=px+Math.cos(a)*L*.5,fy=py+Math.sin(a)*L*.5+8,fr=lerp(7,12,r())*(narrow?.85:1);const fg=g.createRadialGradient(fx-fr*.3,fy-fr*.4,0,fx,fy,fr*1.2);fg.addColorStop(0,'#fff0b8');fg.addColorStop(.45,'#dcaa3e');fg.addColorStop(1,'#7f5512');g.fillStyle=fg;g.beginPath();g.ellipse(fx,fy,fr*.8,fr,a*.2,0,7);g.fill();}}
+    if(depth>1){branchFrom(x2,y2,ang+(r()-.5)*1.1,len*.62,depth-1);branchFrom(lerp(x,x2,.5),lerp(y,y2,.5),ang+(r()<.5?.8:-.8),len*.5,depth-1);}
+  };
+  const L=Math.max(w,h)*.22;
+  branchFrom(-20,h*.08,.25,L*1.1,3);branchFrom(w+20,h*.04,Math.PI-.3,L,3);branchFrom(-20,h*.78,-.35,L*.8,2);branchFrom(w+20,h*.86,Math.PI+.3,L*.85,2);
+  if(!narrow){branchFrom(w*.4,-20,1.35,L*.7,2);}
+}
+/* 8. finale: open sky, clouds low, small golden wreath above the name */
+function finale(g,w,h,narrow){const r=rng(83);sky(g,w,h,r,{clouds:narrow?4:7,cyMin:.94,cyMax:1.06,scale:1.3});
+  const R=narrow?w*.15:Math.min(w,h)*.1;wreath(g,w/2,narrow?h*.24:h*.22,R,r);}
+
+return {hero,curtain,macro,branch,lilac,night,parchment,grove,finale};
+})();
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script>
+(function(){
+"use strict";
+const RM=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const $=s=>document.querySelector(s);
+const clamp01=v=>v<0?0:v>1?1:v;
+let narrow=innerWidth<900;
+
+/* ---------- paint every canvas (or show the user's painting) ---------- */
+function paintAll(){
+  narrow=innerWidth<900;
+  const dpr=Math.min(devicePixelRatio||1,2);
+  document.querySelectorAll('canvas[data-art]').forEach(cv=>{
+    const key=cv.dataset.art, url=window.PAINTINGS[key];
+    if(url){ if(!cv.nextElementSibling||cv.nextElementSibling.tagName!=='IMG'){const im=new Image();im.alt='';im.src=url;cv.after(im);} cv.hidden=true; return; }
+    const box=cv.parentElement.getBoundingClientRect();
+    const w=Math.max(2,Math.round(box.width*dpr)), h=Math.max(2,Math.round((box.height||innerHeight)*dpr));
+    cv.width=w; cv.height=h;
+    const g=cv.getContext('2d');
+    if(key==='curtain') ART.curtain(g,w,h); else ART[key](g,w,h,narrow);
+  });
+}
+
+/* ---------- menu + anchors ---------- */
+const menu=$('#menu'), menuBtn=$('#menuBtn');
+menuBtn.addEventListener('click',()=>{menu.hidden=false;menuBtn.setAttribute('aria-expanded','true');menu.querySelector('a').focus();});
+const closeMenu=()=>{menu.hidden=true;menuBtn.setAttribute('aria-expanded','false');};
+$('#menuClose').addEventListener('click',()=>{closeMenu();menuBtn.focus();});
+addEventListener('keydown',e=>{if(e.key==='Escape'&&!menu.hidden){closeMenu();menuBtn.focus();}});
+document.querySelectorAll('[data-go]').forEach(a=>a.addEventListener('click',e=>{const el=document.getElementById(a.dataset.go);if(!el)return;e.preventDefault();closeMenu();el.scrollIntoView({behavior:RM?'auto':'smooth'});}));
+
+/* ---------- constellation ---------- */
+const svg=$('#stars'), countN=$('#countN'), NS='http://www.w3.org/2000/svg';
+let stars=[],seg=[],total=0,line=null,lastLit=-1;
+function buildStars(){
+  const w=svg.clientWidth||innerWidth, h=svg.clientHeight||innerHeight, nar=w<760;
+  svg.setAttribute('viewBox',`0 0 ${w} ${h}`); svg.innerHTML='';
+  const days=I18N.t('days'), pts=[];
+  for(let d=0;d<7;d++){
+    if(!nar){const span=w*.84,cx=w*.08+span*(d+.5)/7,base=h*.66+Math.sin(d*1.15+.4)*h*.1;
+      pts.push({x:cx-span/7*.22,y:base+Math.cos(d*2.1)*h*.05},{x:cx+span/7*.2,y:base-h*.07+Math.sin(d*1.7)*h*.04});}
+    else{const top=h*.52,span=h*.4,cy=top+span*(d+.5)/7,base=w*.55+Math.sin(d*1.2+.3)*w*.16;
+      pts.push({x:base-w*.12,y:cy-span/7*.18},{x:base+w*.12,y:cy+span/7*.18});}
+  }
+  line=document.createElementNS(NS,'polyline');line.setAttribute('class','lnk');line.setAttribute('points',pts.map(p=>p.x.toFixed(1)+','+p.y.toFixed(1)).join(' '));svg.appendChild(line);
+  seg=[0];for(let i=1;i<pts.length;i++)seg.push(seg[i-1]+Math.hypot(pts[i].x-pts[i-1].x,pts[i].y-pts[i-1].y));total=seg[seg.length-1];
+  line.style.strokeDasharray=total;line.style.strokeDashoffset=total;
+  stars=pts.map(p=>{const gEl=document.createElementNS(NS,'g');const ha=document.createElementNS(NS,'circle');ha.setAttribute('class','halo');ha.setAttribute('cx',p.x);ha.setAttribute('cy',p.y);ha.setAttribute('r',14);
+    const s=document.createElementNS(NS,'circle');s.setAttribute('class','st');s.setAttribute('cx',p.x);s.setAttribute('cy',p.y);s.setAttribute('r',2.2);gEl.append(ha,s);svg.appendChild(gEl);return {g:gEl,s};});
+  for(let d=0;d<7;d++){const a=pts[d*2],b=pts[d*2+1],tx=document.createElementNS(NS,'text');tx.setAttribute('class','day');tx.setAttribute('text-anchor','middle');
+    if(!nar){tx.setAttribute('x',(a.x+b.x)/2);tx.setAttribute('y',Math.max(a.y,b.y)+40);}else{tx.setAttribute('x',Math.min(a.x,b.x)-26);tx.setAttribute('y',(a.y+b.y)/2+4);}
+    tx.textContent=days[d];svg.appendChild(tx);}
+  lastLit=-1;
+}
+function setStars(p){
+  const q=clamp01(p*1.1)*14, lit=Math.min(14,Math.floor(q+.001));
+  if(!line) return;
+  const k=Math.min(13,Math.max(0,q-1)),i=Math.floor(k),f=k-i;
+  const len=q<=1?0:(i>=13?total:seg[i]+(seg[i+1]-seg[i])*f);
+  line.style.strokeDashoffset=total-len;
+  if(lit!==lastLit){stars.forEach((s,j)=>{const on=j<lit;s.g.classList.toggle('on',on);s.s.setAttribute('r',on?4.6:2.2);});lastLit=lit;countN.textContent=lit;}
+}
+
+/* ---------- motion ---------- */
+paintAll(); buildStars();
+I18N.on(()=>{buildStars();if(window.ScrollTrigger)ScrollTrigger.refresh();});
+let rt; addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(()=>{paintAll();buildStars();},200);});
+
+if(!window.gsap||!window.ScrollTrigger){
+  // no animation library: show everything, drive the stars from plain scroll
+  $('#macro').style.opacity=1; document.querySelector('.macro-line').style.opacity=1; document.querySelector('.hero-copy').style.display='none';
+  addEventListener('scroll',()=>{const s=$('#week'),r=s.getBoundingClientRect();setStars(-r.top/(s.offsetHeight-innerHeight));},{passive:true});
+  return;
+}
+gsap.registerPlugin(ScrollTrigger);
+
+// 1. curtain draws open on load, then breathes
+gsap.fromTo('#curtain',{xPercent:RM?0:-62},{xPercent:0,duration:RM?0:2.2,ease:'power3.inOut',delay:.15});
+if(!RM) gsap.to('#curtain canvas',{rotation:.7,duration:3.6,ease:'sine.inOut',yoyo:true,repeat:-1});
+gsap.from('.hero-copy .wrap>div>*',{opacity:0,y:RM?0:24,filter:RM?'none':'blur(8px)',duration:1.1,stagger:.1,delay:.7,ease:'power2.out'});
+
+// 2. zoom into the curtain cloth, cut to the macro weave
+const zoomOrigin=()=>narrow?'86% 40%':'84% 44%';
+const tl=gsap.timeline({scrollTrigger:{trigger:'#hero',start:'top top',end:'bottom bottom',scrub:RM?true:.6,invalidateOnRefresh:true}});
+tl.to('.hero-copy',{opacity:0,y:-30,filter:'blur(6px)',duration:.18,ease:'none'},0);
+if(RM){ tl.to('#heroScene',{opacity:0,duration:.3},.3).to('#macro',{opacity:1,duration:.3},.3); }
+else{
+  tl.fromTo('#heroScene',{scale:1,transformOrigin:zoomOrigin},{scale:7.5,transformOrigin:zoomOrigin,duration:.62,ease:'power2.in'},0)
+    .fromTo('#macro',{opacity:0,scale:1.35},{opacity:1,scale:1,duration:.3,ease:'power1.out'},.5);
+}
+tl.fromTo('.macro-line',{opacity:0,y:RM?0:40,filter:RM?'none':'blur(8px)'},{opacity:1,y:0,filter:'blur(0px)',duration:.2,ease:'none'},.72)
+  .to({},{duration:.08});
+
+// 3. each frame: text arrives from below out of an 8px blur; the painting settles from a slight push-in
+document.querySelectorAll('.frame:not(#hero):not(#week)').forEach(fr=>{
+  const items=fr.querySelectorAll('.reveal');
+  if(items.length) gsap.fromTo(items,{opacity:0,y:RM?0:46,filter:RM?'none':'blur(8px)'},{opacity:1,y:0,filter:'blur(0px)',stagger:.08,ease:'none',
+    scrollTrigger:{trigger:fr,start:'top 80%',end:'top 15%',scrub:.5}});
+  const art=fr.querySelector('.art canvas, .art img');
+  if(art&&!RM) gsap.fromTo(art,{scale:1.1},{scale:1,ease:'none',scrollTrigger:{trigger:fr,start:'top bottom',end:'top top',scrub:true}});
+});
+// the directions list arrives after the heading
+ScrollTrigger.create({trigger:'#dirs',start:'top 40%',onEnter:()=>gsap.fromTo('#dirList li',{opacity:0,y:RM?0:20,filter:RM?'none':'blur(6px)'},{opacity:1,y:0,filter:'blur(0px)',stagger:.07,duration:.6,ease:'power2.out'}),once:true});
+I18N.on(()=>gsap.set('#dirList li',{opacity:1,y:0,filter:'none'}));
+
+// 4. the week: stars light up with scroll
+ScrollTrigger.create({trigger:'#week',start:'top top',end:'bottom bottom',scrub:true,onUpdate:s=>setStars(s.progress)});
+gsap.fromTo('.week-copy',{opacity:0,y:RM?0:40,filter:RM?'none':'blur(8px)'},{opacity:1,y:0,filter:'blur(0px)',ease:'none',scrollTrigger:{trigger:'#week',start:'top 70%',end:'top top',scrub:.5}});
+
+addEventListener('load',()=>ScrollTrigger.refresh());
+})();
+</script>
+</body>
+</html>

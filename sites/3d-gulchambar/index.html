@@ -1,0 +1,712 @@
+<!doctype html>
+<html lang="uz-Cyrl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+  :root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+  body{margin:0}
+  img{max-width:100%}
+  [hidden]{display:none!important}
+</style>
+<title>gulhayo.ai Muse</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Forum&family=Golos+Text:wght@400;500;600&family=Spectral:ital,wght@0,300;0,400;1,300&display=swap">
+<style>
+/* Layout: a painted lapis sky (WebGL) lives behind the "sky" sections; marble-plaster "fresco" sections slide over it.
+   Hero text left / laurel on a column right; scroll flies the camera through the wreath into a constellation of 14 videos. */
+:root{
+  --lapis:#1d43c4;      /* sky, page ground */
+  --lapis-deep:#13308f; /* footer, nav glass */
+  --cloud:#f5f7fc;      /* text on sky */
+  --marble:#ece7dd;     /* fresco sections */
+  --ink:#1a1d27;        /* text on marble */
+  --stone:#6b6a66;      /* secondary text on marble */
+  --gold:#d9b25a;       /* laurel, primary action */
+  --gold-hi:#f3d98f;
+  --cinnabar:#b5342b;   /* the ribbon; used once or twice */
+  --rule-sky:rgba(245,247,252,.28);
+  --rule-stone:rgba(26,29,39,.16);
+  --serif:"Spectral",Georgia,"Times New Roman",serif;
+  --roman:"Forum","Spectral",Georgia,serif;
+  --sans:"Golos Text","Segoe UI",system-ui,-apple-system,sans-serif;
+  --gut-l:max(20px, env(safe-area-inset-left, 0px));
+  --gut-r:max(20px, env(safe-area-inset-right, 0px));
+  color-scheme:light;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{background:var(--lapis)}
+body{background:var(--lapis);color:var(--cloud);font-family:var(--sans);font-size:16px;line-height:1.6;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+a{color:inherit}
+button{font:inherit;color:inherit}
+p{margin:0}
+:focus-visible{outline:2px solid var(--gold-hi);outline-offset:3px;border-radius:4px}
+.fresco :focus-visible{outline-color:var(--cinnabar)}
+
+#sky{position:fixed;inset:0;width:100%;height:100%;z-index:0;display:block}
+main,footer{position:relative;z-index:1}
+.wrap{width:100%;max-width:1320px;margin:0 auto;padding-left:var(--gut-l);padding-right:var(--gut-r)}
+
+/* ---------- nav ---------- */
+.nav{position:fixed;z-index:10;top:calc(14px + env(safe-area-inset-top, 0px));left:0;right:0;padding-left:var(--gut-l);padding-right:var(--gut-r);pointer-events:none}
+.nav-in{pointer-events:auto;max-width:1320px;margin:0 auto;display:flex;align-items:center;gap:18px;padding:8px 8px 8px 20px;border-radius:999px;
+  background:rgba(19,48,143,.42);backdrop-filter:blur(14px) saturate(1.3);-webkit-backdrop-filter:blur(14px) saturate(1.3);border:1px solid rgba(245,247,252,.16)}
+.brand{font:400 24px/1 var(--roman);letter-spacing:.02em;text-decoration:none;margin-right:auto;color:var(--cloud)}
+.nav-links{display:flex;gap:22px;font-size:14px}
+.nav-links a{text-decoration:none;color:rgba(245,247,252,.82)}
+.nav-links a:hover{color:#fff}
+.lang{display:flex;padding:3px;border-radius:999px;background:rgba(245,247,252,.12)}
+.lang button{border:0;background:none;cursor:pointer;font:600 12px/1 var(--sans);padding:7px 10px;border-radius:999px;color:rgba(245,247,252,.75)}
+.lang button[aria-pressed="true"]{background:var(--cloud);color:var(--lapis-deep)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;text-decoration:none;border-radius:999px;font:500 15px/1 var(--sans);padding:14px 22px;border:1px solid transparent;cursor:pointer;transition:background .2s,color .2s,border-color .2s}
+.btn svg{width:17px;height:17px;flex:none}
+.btn.gold{background:var(--gold);color:var(--ink)}
+.btn.gold:hover{background:var(--gold-hi)}
+.btn.ghost{border-color:rgba(245,247,252,.5);color:var(--cloud)}
+.btn.ghost:hover{background:rgba(245,247,252,.12)}
+.btn.sm{padding:11px 18px;font-size:14px}
+
+/* ---------- hero ---------- */
+.hero{position:relative;min-height:100vh;display:flex;align-items:center}
+.hero .wrap{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);align-items:center;padding-block:120px 80px}
+.hero-copy{display:grid;gap:26px;max-width:36rem}
+.hero h1{margin:0;font:300 clamp(44px,6.2vw,92px)/1.02 var(--serif);letter-spacing:-.015em;text-wrap:balance}
+.hero .sub{font-size:18px;line-height:1.6;color:rgba(245,247,252,.9);max-width:30rem}
+.actions{display:flex;flex-wrap:wrap;gap:12px}
+.hero .note{font-size:13px;color:rgba(245,247,252,.72)}
+.hero .note b{font-weight:500;color:var(--cloud)}
+
+/* ---------- dive ---------- */
+.dive{height:170vh;position:relative}
+.dive-line{position:sticky;top:0;height:100vh;display:grid;place-items:center;text-align:center;padding-left:var(--gut-l);padding-right:var(--gut-r)}
+.dive-line p{font:300 italic clamp(28px,3.6vw,54px)/1.2 var(--serif);max-width:20em;text-wrap:balance;opacity:0;text-shadow:0 2px 40px rgba(19,48,143,.5)}
+
+/* ---------- constellation ---------- */
+.stars{height:280vh;position:relative}
+.stars-pin{position:sticky;top:0;height:100vh;overflow:hidden}
+#constellation{position:absolute;inset:0;width:100%;height:100%}
+.stars-copy{position:absolute;left:0;right:0;top:calc(96px + env(safe-area-inset-top, 0px))}
+.stars-copy .wrap{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:24px;align-items:end}
+.stars-copy h2{margin:0 0 14px;font:300 clamp(32px,4vw,58px)/1.06 var(--serif);text-wrap:balance;max-width:14em}
+.stars-copy p{max-width:32rem;color:rgba(245,247,252,.88)}
+.count{font:400 clamp(56px,7vw,104px)/.9 var(--roman);text-align:right;white-space:nowrap}
+.count small{display:block;font:400 14px/1.4 var(--sans);color:rgba(245,247,252,.75);margin-top:8px}
+#constellation .day{font:500 13px var(--sans);fill:rgba(245,247,252,.78)}
+#constellation .lnk{fill:none;stroke:rgba(245,247,252,.75);stroke-width:1.2}
+#constellation .st{fill:var(--cloud);transition:r .35s cubic-bezier(.2,.8,.2,1),opacity .35s}
+#constellation .halo{fill:var(--gold-hi);opacity:0;transition:opacity .4s}
+#constellation .on .halo{opacity:.35}
+
+/* ---------- fresco (light) sections ---------- */
+.fresco{background-color:var(--marble);color:var(--ink);
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .45  0 0 0 0 .42  0 0 0 0 .38  0 0 0 .09 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>")}
+.fresco .wrap{padding-block:clamp(88px,12vw,160px)}
+.sec-head{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:24px 64px;align-items:end;margin-bottom:clamp(40px,6vw,72px)}
+.sec-head h2{margin:0;font:300 clamp(36px,4.6vw,68px)/1.04 var(--serif);letter-spacing:-.01em;text-wrap:balance}
+.sec-head p{color:var(--stone);max-width:34rem;font-size:17px}
+
+.dirs{list-style:none;margin:0;padding:0;border-top:1px solid var(--rule-stone)}
+.dir{display:grid;grid-template-columns:64px minmax(0,1.1fr) minmax(0,1.4fr) minmax(0,1fr);gap:20px 32px;align-items:baseline;padding:28px 0;border-bottom:1px solid var(--rule-stone)}
+.dir .lv{font:400 26px/1 var(--roman);color:#a3812f}
+.dir h3{margin:0;font:400 clamp(24px,2.4vw,34px)/1.1 var(--serif)}
+.dir p{color:#3b3d45;max-width:40ch}
+.dir .tools{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:14px;color:var(--stone)}
+.legend{margin-top:22px;font-size:14px;color:var(--stone)}
+.legend b{font:400 18px var(--roman);color:#a3812f;font-weight:400}
+
+.levels{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(32px,6vw,96px)}
+.level{display:grid;gap:18px;align-content:start}
+.numeral{font:400 clamp(140px,19vw,260px)/.8 var(--roman);letter-spacing:.02em;
+  background:linear-gradient(170deg,#f6e3a4 0%,#cf9f3f 38%,#8a6420 62%,#e3c06e 100%);-webkit-background-clip:text;background-clip:text;color:transparent;
+  filter:drop-shadow(0 1px 0 rgba(255,255,255,.6)) drop-shadow(0 10px 18px rgba(120,90,30,.18))}
+.level h3{margin:0;font:400 clamp(26px,2.6vw,36px)/1.1 var(--serif)}
+.level p{color:#3b3d45;max-width:36rem}
+.level .now{font-size:15px;color:var(--cinnabar)}
+.soon{margin-top:clamp(48px,6vw,80px);padding-top:24px;border-top:1px solid var(--rule-stone);color:var(--stone);max-width:52rem}
+.soon b{color:var(--ink);font-weight:500}
+
+/* ---------- honest (sky) ---------- */
+.honest .wrap{padding-block:clamp(120px,16vw,220px)}
+.honest h2{margin:0 0 28px;font:300 clamp(38px,5.4vw,84px)/1.04 var(--serif);letter-spacing:-.015em;max-width:14em;text-wrap:balance;text-shadow:0 2px 40px rgba(19,48,143,.45)}
+.honest .lead{max-width:36rem;font-size:18px;color:rgba(245,247,252,.92);text-shadow:0 1px 20px rgba(19,48,143,.6)}
+.facts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:28px;margin-top:clamp(56px,8vw,96px)}
+.fact{border-top:1px solid var(--rule-sky);padding-top:18px;display:grid;gap:8px;text-shadow:0 1px 18px rgba(19,48,143,.6)}
+.fact h3{margin:0;font:400 22px/1.2 var(--serif)}
+.fact p{font-size:15px;color:rgba(245,247,252,.86)}
+
+/* ---------- faq ---------- */
+.faq-grid{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:clamp(32px,6vw,96px);align-items:start}
+.faq-grid h2{margin:0;font:300 clamp(36px,4.6vw,68px)/1.04 var(--serif);position:sticky;top:120px;text-wrap:balance}
+details{border-top:1px solid var(--rule-stone)}
+details:last-child{border-bottom:1px solid var(--rule-stone)}
+summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;gap:20px;align-items:center;padding:22px 0;font:400 21px/1.35 var(--serif)}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"";flex:none;width:12px;height:12px;border-right:1.5px solid var(--ink);border-bottom:1.5px solid var(--ink);transform:rotate(45deg) translate(-3px,-3px);transition:transform .3s}
+details[open] summary::after{transform:rotate(225deg) translate(-3px,-3px)}
+details p{padding:0 0 24px;color:#3b3d45;max-width:58ch}
+
+/* ---------- final ---------- */
+.final{min-height:100vh;display:flex;align-items:flex-end}
+.final .wrap{display:grid;justify-items:center;text-align:center;gap:22px;padding-block:48vh 12vh}
+.mark{font:400 clamp(64px,13vw,200px)/.9 var(--roman);letter-spacing:.01em;text-shadow:0 4px 60px rgba(19,48,143,.55)}
+.final h2{margin:0;font:300 clamp(26px,3vw,40px)/1.15 var(--serif)}
+.final p{max-width:34rem;color:rgba(245,247,252,.9);text-shadow:0 1px 20px rgba(19,48,143,.6)}
+.handle{font-size:14px;color:rgba(245,247,252,.75);user-select:all}
+
+footer{background:var(--lapis-deep);color:rgba(245,247,252,.75);font-size:14px}
+footer .wrap{display:flex;flex-wrap:wrap;gap:12px 28px;justify-content:space-between;padding-block:28px calc(28px + env(safe-area-inset-bottom, 0px))}
+footer a{text-decoration:none}
+footer a:hover{color:#fff}
+
+/* ---------- small screens ---------- */
+@media (max-width:900px){
+  .nav-links{display:none}
+  .hero{align-items:flex-end}
+  .hero .wrap{grid-template-columns:1fr;padding-block:52vh 48px}
+  .hero-copy{gap:20px}
+  .hero .sub{font-size:16px}
+  .sec-head,.faq-grid,.levels{grid-template-columns:1fr}
+  .faq-grid h2{position:static}
+  .dir{grid-template-columns:44px minmax(0,1fr);padding:22px 0}
+  .dir p,.dir .tools{grid-column:2}
+  .facts{grid-template-columns:1fr;gap:20px}
+  .stars-copy .wrap{grid-template-columns:1fr;gap:10px}
+  .stars-copy p{font-size:14px}
+  .count{text-align:left;font-size:48px}
+  .count small{display:inline;margin-left:8px}
+  .final .wrap{padding-block:54vh 10vh}
+}
+@media (max-width:520px){
+  .nav-in{padding-left:16px;gap:10px}
+  .nav-in .btn.sm{display:none}
+  .actions .btn{flex:1 1 100%}
+}
+.no-gl #sky{display:none}
+.no-gl body,.no-gl{background:linear-gradient(#173cb8,#3f78e6 70%,#9cbcf3)}
+@media (prefers-reduced-motion: reduce){ .btn,#constellation .st,#constellation .halo{transition:none} }
+</style>
+</head>
+<body>
+<canvas id="sky" aria-hidden="true"></canvas>
+
+<header class="nav">
+  <div class="nav-in">
+    <a class="brand" href="#top" data-go="top">gulhayo.ai</a>
+    <nav class="nav-links" data-i18n-aria="navA">
+      <a href="#program" data-go="program" data-i18n="nav1"></a>
+      <a href="#week" data-go="week" data-i18n="nav2"></a>
+      <a href="#levels" data-go="levels" data-i18n="nav3"></a>
+      <a href="#faq" data-go="faq" data-i18n="nav4"></a>
+    </nav>
+    <div class="lang" role="group" aria-label="Тил / Язык">
+      <button type="button" data-lang="uz" aria-pressed="true">UZ</button>
+      <button type="button" data-lang="ru" aria-pressed="false">RU</button>
+    </div>
+    <a class="btn gold sm" href="https://ig.me/m/gulhayo.ai" target="_blank" rel="noopener" data-i18n="navCta"></a>
+  </div>
+</header>
+
+<main>
+  <section class="hero sky-zone" id="top">
+    <div class="wrap">
+      <div class="hero-copy">
+        <h1 data-i18n="h1"></h1>
+        <p class="sub" data-i18n="sub"></p>
+        <div class="actions">
+          <a class="btn gold" href="https://ig.me/m/gulhayo.ai" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4 20-7z"/></svg><span data-i18n="ctaDirect"></span></a>
+          <a class="btn ghost" href="#program" data-go="program" data-i18n="ctaProgram"></a>
+        </div>
+        <p class="note" data-i18n="heroNote"></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="dive sky-zone" id="dive" aria-hidden="true">
+    <div class="dive-line"><p id="diveLine" data-i18n="dive"></p></div>
+  </section>
+
+  <section class="stars sky-zone" id="week">
+    <div class="stars-pin">
+      <svg id="constellation" role="img" data-i18n-aria="starsA"></svg>
+      <div class="stars-copy">
+        <div class="wrap">
+          <div>
+            <h2 data-i18n="starsH"></h2>
+            <p data-i18n="starsP"></p>
+          </div>
+          <div class="count" aria-live="polite"><span id="countN">0</span>&thinsp;/&thinsp;14<small data-i18n="countS"></small></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="fresco" id="program">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2 data-i18n="dirH"></h2>
+        <p data-i18n="dirP"></p>
+      </div>
+      <ul class="dirs" id="dirs"></ul>
+      <p class="legend" data-i18n="legend"></p>
+    </div>
+  </section>
+
+  <section class="fresco" id="levels" style="border-top:1px solid var(--rule-stone)">
+    <div class="wrap">
+      <div class="sec-head"><h2 data-i18n="lvH"></h2><p data-i18n="lvP"></p></div>
+      <div class="levels">
+        <article class="level">
+          <div class="numeral" aria-hidden="true">III</div>
+          <h3>Master AI 3.0</h3>
+          <p data-i18n="lv3"></p>
+          <p class="now" data-i18n="lv3now"></p>
+        </article>
+        <article class="level">
+          <div class="numeral" aria-hidden="true">IV</div>
+          <h3>Master AI 4.0</h3>
+          <p data-i18n="lv4"></p>
+          <p class="now" data-i18n="lv4now"></p>
+        </article>
+      </div>
+      <p class="soon" data-i18n="soon"></p>
+    </div>
+  </section>
+
+  <section class="honest sky-zone" id="honest">
+    <div class="wrap">
+      <h2 data-i18n="honH"></h2>
+      <p class="lead" data-i18n="honP"></p>
+      <div class="facts">
+        <div class="fact"><h3 data-i18n="fa1h"></h3><p data-i18n="fa1p"></p></div>
+        <div class="fact"><h3 data-i18n="fa2h"></h3><p data-i18n="fa2p"></p></div>
+        <div class="fact"><h3 data-i18n="fa3h"></h3><p data-i18n="fa3p"></p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="fresco" id="faq">
+    <div class="wrap faq-grid">
+      <h2 data-i18n="faqH"></h2>
+      <div data-i18n="faqList"></div>
+    </div>
+  </section>
+
+  <section class="final sky-zone" id="join">
+    <div class="wrap">
+      <div class="mark" aria-hidden="true">gulhayo.ai</div>
+      <h2 data-i18n="finH"></h2>
+      <p data-i18n="finP"></p>
+      <div class="actions" style="justify-content:center">
+        <a class="btn gold" href="https://ig.me/m/gulhayo.ai" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4 20-7z"/></svg><span data-i18n="ctaDirect"></span></a>
+        <a class="btn ghost" href="https://www.instagram.com/gulhayo.ai/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg><span data-i18n="ctaIg"></span></a>
+      </div>
+      <p class="handle">@gulhayo.ai</p>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span data-i18n="foot"></span>
+    <a href="https://www.instagram.com/gulhayo.ai/" target="_blank" rel="noopener">Instagram @gulhayo.ai</a>
+  </div>
+</footer>
+
+<script>
+/* Language layer. Uzbek (Cyrillic) by default; Russian on demand. Runs before the 3D script so the first paint is translated. */
+window.I18N=(function(){
+const D={
+ru:{
+ navA:'Разделы', nav1:'Программа', nav2:'Как учимся', nav3:'Уровни', nav4:'Вопросы', navCta:'Записаться',
+ h1:'Снимайте ИИ-видео, которые замечают',
+ sub:'Курс Гульхайо по ИИ-видео, личному бренду и росту в Instagram. Сейчас идёт третий поток Master AI 3.0.',
+ ctaDirect:'Написать в Direct', ctaProgram:'Смотреть программу', ctaIg:'Открыть Instagram',
+ heroNote:'<b>Уроки на узбекском языке.</b> Прокрутите вниз, чтобы пройти сквозь венок.',
+ dive:'Мастерство начинается с привычки снимать каждый день.',
+ starsA:'Созвездие недели: 14 роликов, по два в день', starsH:'Ваша неделя на курсе: 14 роликов',
+ starsP:'С первой недели вы ведёте Instagram, TikTok, YouTube и Telegram-канал и выкладываете по два ролика в день. Каждая звезда здесь один ролик.',
+ countS:'роликов за неделю', days:['Пн','Вт','Ср','Чт','Пт','Сб','Вс'],
+ dirH:'Шесть направлений программы', dirP:'Сначала вы учитесь делать ролики и вести блог, затем превращаете навык в услугу для клиентов.',
+ legend:'<b>III</b> уровень Master AI 3.0, <b>IV</b> уровень Master AI 4.0',
+ lvH:'Два уровня', lvP:'Уровень 4.0 открыт для тех, кто прошёл 3.0.',
+ lv3:'Основа: ИИ-видео, личный бренд, рост в Instagram и ежедневная практика. Финальный урок посвящён ИИ-агенту ChatPlace и монетизации Instagram.',
+ lv3now:'Сейчас идёт третий поток.',
+ lv4:'Около шести уроков: работа с клиентами и заработок, ИИ-слайды, таргетированная реклама, сайты с Claude и монтаж видео.',
+ lv4now:'Для выпускников уровня 3.0.',
+ soon:'<b>Скоро отдельный интенсив по Claude на три часа.</b> В программе Higgsfield, Google Workspace, навыки и плагины и честное сравнение с ChatGPT.',
+ honH:'Без обещаний дохода. С практикой каждый день.',
+ honP:'Курс даёт навык и дисциплину. Результат зависит от того, сколько вы снимаете и выкладываете, поэтому практика здесь главная часть обучения.',
+ fa1h:'Презентация к каждому уроку', fa1p:'Шаги, промпты и примеры собраны на слайдах на узбекском языке.',
+ fa2h:'Группа потока в Telegram', fa2p:'Вопросы, конкурсы и видно, кто сколько роликов уже сделал.',
+ fa3h:'Финальный урок про монетизацию', fa3p:'ИИ-агент ChatPlace отвечает в Direct, а вы учитесь зарабатывать на Instagram.',
+ faqH:'Спрашивают до записи',
+ faqList:'<details open><summary>Нужен ли опыт с нейросетями?</summary><p>Нет. Master AI 3.0 начинается с основ, продвинутые темы идут на уровне 4.0.</p></details><details><summary>На каком языке уроки?</summary><p>Занятия и презентации к урокам на узбекском языке, слайды в кириллице.</p></details><details><summary>Какое домашнее задание?</summary><p>Завести Instagram, TikTok, YouTube и Telegram-канал и выкладывать по два ролика в день, то есть 14 роликов в неделю. Задания сдаются в Telegram-группе потока.</p></details><details><summary>Гарантируете ли вы заработок?</summary><p>Нет. Курс даёт навыки и ежедневную практику, а результат зависит от вашей работы. Заработку и работе с клиентами посвящён уровень 4.0.</p></details><details><summary>Сколько стоит и когда следующий поток?</summary><p>Даты и условия Гульхайо сообщает лично. Напишите в Direct @gulhayo.ai.</p></details>',
+ finH:'Запишитесь на следующий поток', finP:'Напишите в Direct, чем занимаетесь и что хотите снимать. В ответ получите даты и условия.',
+ foot:'© 2026 gulhayo.ai. Обучение ИИ-видео, личному бренду и росту в Instagram.'
+},
+uz:{
+ navA:'Бўлимлар', nav1:'Дастур', nav2:'Қандай ўқиймиз', nav3:'Даражалар', nav4:'Саволлар', navCta:'Ёзилиш',
+ h1:'Эътибор тортадиган ИИ-видеолар олинг',
+ sub:'Гулҳаёнинг ИИ-видео, шахсий бренд ва Instagram’да ўсиш бўйича курси. Ҳозир Master AI 3.0 нинг учинчи потоки давом этмоқда.',
+ ctaDirect:'Direct’га ёзиш', ctaProgram:'Дастурни кўриш', ctaIg:'Instagram’ни очиш',
+ heroNote:'<b>Дарслар ўзбек тилида.</b> Гулчамбар ичидан ўтиш учун пастга айлантиринг.',
+ dive:'Маҳорат ҳар куни видео олиш одатидан бошланади.',
+ starsA:'Ҳафта юлдуз туркуми: кунига иккитадан, 14 та ролик', starsH:'Курсдаги ҳафтангиз: 14 та ролик',
+ starsP:'Биринчи ҳафтадан Instagram, TikTok, YouTube ва Telegram-каналингизни юритасиз ва ҳар куни иккитадан ролик жойлайсиз. Бу ердаги ҳар бир юлдуз битта ролик.',
+ countS:'ҳафталик роликлар', days:['Ду','Се','Чо','Па','Жу','Ша','Як'],
+ dirH:'Дастурнинг олтита йўналиши', dirP:'Аввал ролик тайёрлаш ва блог юритишни ўрганасиз, кейин бу кўникмани мижозлар учун хизматга айлантирасиз.',
+ legend:'<b>III</b> Master AI 3.0 даражаси, <b>IV</b> Master AI 4.0 даражаси',
+ lvH:'Икки даража', lvP:'4.0 даражаси 3.0 ни тугатганлар учун очиқ.',
+ lv3:'Асос: ИИ-видео, шахсий бренд, Instagram’да ўсиш ва ҳар кунги амалиёт. Якуний дарс ChatPlace ИИ-агенти ва Instagram монетизациясига бағишланган.',
+ lv3now:'Ҳозир учинчи поток давом этмоқда.',
+ lv4:'Тахминан олтита дарс: мижозлар билан ишлаш ва даромад, ИИ-слайдлар, таргет реклама, Claude билан сайтлар ва видео монтаж.',
+ lv4now:'3.0 даражасини тугатганлар учун.',
+ soon:'<b>Тез орада Claude бўйича уч соатлик алоҳида интенсив.</b> Дастурда Higgsfield, Google Workspace, скиллар ва плагинлар ҳамда ChatGPT билан ҳалол таққослаш.',
+ honH:'Даромадни ваъда қилмаймиз. Ҳар куни амалиёт қиламиз.',
+ honP:'Курс кўникма ва интизом беради. Натижа қанча видео олиб жойлашингизга боғлиқ, шунинг учун амалиёт ўқишнинг асосий қисми.',
+ fa1h:'Ҳар бир дарсга тақдимот', fa1p:'Қадамлар, промптлар ва мисоллар ўзбек тилидаги слайдларда жамланган.',
+ fa2h:'Telegram’да поток гуруҳи', fa2p:'Саволлар, танловлар ва ким нечта ролик қилгани кўриниб туради.',
+ fa3h:'Монетизация ҳақида якуний дарс', fa3p:'ChatPlace ИИ-агенти Direct’да жавоб беради, сиз эса Instagram’да даромад олишни ўрганасиз.',
+ faqH:'Ёзилишдан олдин сўрашади',
+ faqList:'<details open><summary>Нейросеть билан ишлаш тажрибаси керакми?</summary><p>Йўқ. Master AI 3.0 асослардан бошланади, мураккаб мавзулар 4.0 даражасида ўтилади.</p></details><details><summary>Дарслар қайси тилда?</summary><p>Машғулотлар ва дарс тақдимотлари ўзбек тилида, слайдлар кирилл алифбосида.</p></details><details><summary>Уй вазифаси қандай?</summary><p>Instagram, TikTok, YouTube ва Telegram-канал очиб, ҳар куни иккитадан ролик жойлаш, яъни ҳафтасига 14 та ролик. Вазифалар поток Telegram-гуруҳида топширилади.</p></details><details><summary>Даромадни кафолатлайсизми?</summary><p>Йўқ. Курс кўникма ва ҳар кунги амалиёт беради, натижа эса сизнинг меҳнатингизга боғлиқ. Даромад ва мижозлар билан ишлашга 4.0 даражаси бағишланган.</p></details><details><summary>Нархи қанча, кейинги поток қачон?</summary><p>Санаси ва шартларини Гулҳаё шахсан айтади. Direct’га ёзинг: @gulhayo.ai.</p></details>',
+ finH:'Кейинги потокка ёзилинг', finP:'Нима билан шуғулланишингиз ва қандай видеолар олмоқчи эканингизни Direct’га ёзинг. Жавобда санаси ва шартларини оласиз.',
+ foot:'© 2026 gulhayo.ai. ИИ-видео, шахсий бренд ва Instagram’да ўсиш бўйича таълим.'
+}};
+const DIRS={
+ ru:[
+  ['III','ИИ-видео','Генерация и монтаж вертикальных роликов с помощью нейросетей: от промпта до готового Reels 9:16.',['Veo 3','Higgsfield','Промпты','Монтаж']],
+  ['III','Личный бренд','О чём снимать, как говорить в кадре и держать единый стиль во всех роликах.',['Позиционирование','Визуальный стиль','Сценарии']],
+  ['III','Рост в Instagram','Регулярные Reels, хук в первые секунды, подписи и вовлечение. Те же ролики выходят в TikTok, YouTube и Telegram.',['Reels','Хуки','Shorts']],
+  ['III','ИИ-агент в Direct','Автоответчик ChatPlace отвечает подписчикам, а вы разбираетесь в монетизации Instagram.',['ChatPlace','Автоответы','Монетизация']],
+  ['IV','Клиенты и заработок','Как находить клиентов, делать для них ИИ-видео и презентации и запускать таргетированную рекламу.',['Клиенты','ИИ-слайды','Таргет']],
+  ['IV','Сайты с Claude','Собираем с Claude сайты вроде этого и монтируем к ним видео.',['Claude','Сайты','Монтаж видео']]],
+ uz:[
+  ['III','ИИ-видео','Нейросеть ёрдамида вертикал роликлар яратиш ва монтаж қилиш: промптдан тайёр 9:16 Reels’гача.',['Veo 3','Higgsfield','Промптлар','Монтаж']],
+  ['III','Шахсий бренд','Нима ҳақида видео олиш, кадрда қандай гапириш ва барча роликларда ягона услубни сақлаш.',['Позициялаш','Визуал услуб','Сценарийлар']],
+  ['III','Instagram’да ўсиш','Мунтазам Reels, биринчи сониялардаги хук, изоҳлар ва фаоллик. Шу роликлар TikTok, YouTube ва Telegram’га ҳам чиқади.',['Reels','Хуклар','Shorts']],
+  ['III','Direct’да ИИ-агент','ChatPlace автожавобчиси обуначиларга жавоб беради, сиз эса Instagram монетизациясини ўрганасиз.',['ChatPlace','Автожавоблар','Монетизация']],
+  ['IV','Мижозлар ва даромад','Мижозларни қандай топиш, улар учун ИИ-видео ва тақдимотлар тайёрлаш ва таргет рекламани ишга тушириш.',['Мижозлар','ИИ-слайдлар','Таргет']],
+  ['IV','Claude билан сайтлар','Claude билан мана шунга ўхшаш сайтлар йиғамиз ва уларга видео монтаж қиламиз.',['Claude','Сайтлар','Видео монтаж']]]
+};
+let lang='uz';
+try{const s=localStorage.getItem('gulhayo-lang'); if(s==='ru'||s==='uz') lang=s;}catch(e){}
+const subs=[];
+const t=k=>{const v=D[lang][k]; return v==null?D.ru[k]:v;};
+function renderDirs(){
+  const ul=document.getElementById('dirs');
+  ul.innerHTML=DIRS[lang].map(([lv,h,p,tools])=>`<li class="dir"><span class="lv">${lv}</span><h3>${h}</h3><p>${p}</p><span class="tools">${tools.map(x=>`<span>${x}</span>`).join('')}</span></li>`).join('');
+}
+function apply(){
+  document.documentElement.lang=lang==='uz'?'uz-Cyrl':'ru';
+  document.querySelectorAll('[data-i18n]').forEach(el=>{el.innerHTML=t(el.dataset.i18n);});
+  document.querySelectorAll('[data-i18n-aria]').forEach(el=>el.setAttribute('aria-label',t(el.dataset.i18nAria)));
+  document.querySelectorAll('.lang button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.lang===lang)));
+  renderDirs();
+}
+function set(l){ if(l===lang) return; lang=l; try{localStorage.setItem('gulhayo-lang',l);}catch(e){} apply(); subs.forEach(f=>f()); }
+apply();
+document.querySelectorAll('.lang button').forEach(b=>b.addEventListener('click',()=>set(b.dataset.lang)));
+return {t, on:f=>subs.push(f)};
+})();
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(function(){
+"use strict";
+const $=s=>document.querySelector(s);
+const RM=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const clamp01=v=>v<0?0:v>1?1:v;
+const mix=(a,b,t)=>a+(b-a)*t;
+const ease=t=>t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;
+
+/* ---------- smooth anchor links ---------- */
+document.querySelectorAll('[data-go]').forEach(a=>a.addEventListener('click',e=>{
+  const el=document.getElementById(a.dataset.go); if(!el) return; e.preventDefault();
+  el.scrollIntoView({behavior:RM?'auto':'smooth',block:'start'});
+}));
+
+/* ---------- constellation (SVG, scroll-driven) ---------- */
+const svg=$('#constellation'), countN=$('#countN'), NS='http://www.w3.org/2000/svg';
+let stars=[], segLen=[], totalLen=0, pathEl=null;
+function buildStars(){
+  const w=svg.clientWidth||innerWidth, h=svg.clientHeight||innerHeight, narrow=w<760;
+  svg.setAttribute('viewBox',`0 0 ${w} ${h}`);
+  svg.innerHTML='';
+  const days=I18N.t('days'), pts=[];
+  // a gentle winding path, two stars per day
+  for(let d=0;d<7;d++){
+    let x,y,x2,y2;
+    if(!narrow){
+      const left=w*.08, span=w*.84, cx=left+span*(d+.5)/7;
+      const base=h*.66+Math.sin(d*1.15+.4)*h*.1;
+      x=cx-span/7*.22; y=base+Math.cos(d*2.1)*h*.05; x2=cx+span/7*.2; y2=base-h*.07+Math.sin(d*1.7)*h*.04;
+    }else{
+      const top=h*.5, span=h*.44, cy=top+span*(d+.5)/7;
+      const base=w*.5+Math.sin(d*1.2+.3)*w*.18;
+      x=base-w*.12; y=cy-span/7*.18; x2=base+w*.12; y2=cy+span/7*.18;
+    }
+    pts.push({x,y,d},{x:x2,y:y2,d});
+  }
+  pathEl=document.createElementNS(NS,'polyline');
+  pathEl.setAttribute('class','lnk'); pathEl.setAttribute('points',pts.map(p=>`${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(' '));
+  svg.appendChild(pathEl);
+  segLen=[0]; for(let i=1;i<pts.length;i++) segLen.push(segLen[i-1]+Math.hypot(pts[i].x-pts[i-1].x,pts[i].y-pts[i-1].y));
+  totalLen=segLen[segLen.length-1];
+  pathEl.style.strokeDasharray=totalLen; pathEl.style.strokeDashoffset=totalLen;
+  stars=pts.map(p=>{
+    const g=document.createElementNS(NS,'g');
+    const halo=document.createElementNS(NS,'circle'); halo.setAttribute('class','halo'); halo.setAttribute('cx',p.x); halo.setAttribute('cy',p.y); halo.setAttribute('r',14);
+    const s=document.createElementNS(NS,'circle'); s.setAttribute('class','st'); s.setAttribute('cx',p.x); s.setAttribute('cy',p.y); s.setAttribute('r',2.2);
+    g.appendChild(halo); g.appendChild(s); svg.appendChild(g); return {g,s};
+  });
+  for(let d=0;d<7;d++){
+    const a=pts[d*2], b=pts[d*2+1], tx=document.createElementNS(NS,'text');
+    tx.setAttribute('class','day'); tx.setAttribute('text-anchor','middle');
+    if(!narrow){tx.setAttribute('x',(a.x+b.x)/2); tx.setAttribute('y',Math.max(a.y,b.y)+40);}
+    else{tx.setAttribute('x',Math.min(a.x,b.x)-26); tx.setAttribute('y',(a.y+b.y)/2+4);}
+    tx.textContent=days[d]; svg.appendChild(tx);
+  }
+  lastLit=-1;
+}
+let lastLit=-1;
+function updateStars(){
+  const sec=$('#week'), r=sec.getBoundingClientRect();
+  const q=clamp01((-r.top)/(sec.offsetHeight-innerHeight)*1.12)*14;
+  const lit=Math.min(14,Math.floor(q+.001));
+  if(stars.length){
+    const k=Math.min(13,Math.max(0,q-1)), i=Math.floor(k), f=k-i;
+    const len=q<=1?0:(i>=13?totalLen:segLen[i]+(segLen[i+1]-segLen[i])*f);
+    pathEl.style.strokeDashoffset=totalLen-len;
+    if(lit!==lastLit){stars.forEach((s,j)=>{const on=j<lit;s.g.classList.toggle('on',on);s.s.setAttribute('r',on?4.6:2.2);});lastLit=lit;countN.textContent=lit;}
+  }
+}
+I18N.on(()=>{buildStars();updateStars();});
+
+/* ---------- dive line ---------- */
+const diveLine=$('#diveLine');
+function updateDive(){
+  const r=$('#dive').getBoundingClientRect();
+  const p=clamp01(-r.top/(r.height-innerHeight));
+  diveLine.style.opacity=(clamp01((p-.18)/.22)*(1-clamp01((p-.72)/.2))).toFixed(3);
+}
+
+/* ---------- WebGL: painted sky + laurel on a column ---------- */
+let renderer;
+try{ if(!window.THREE) throw 0; renderer=new THREE.WebGLRenderer({canvas:$('#sky'),antialias:true,powerPreference:'high-performance'}); }
+catch(e){ document.documentElement.classList.add('no-gl'); }
+
+const onScroll=()=>{updateDive();updateStars();};
+addEventListener('scroll',onScroll,{passive:true});
+addEventListener('resize',()=>{buildStars();onScroll();});
+buildStars(); onScroll();
+if(!renderer) return;
+
+const DPR=Math.min(devicePixelRatio||1,1.6);
+renderer.setPixelRatio(DPR);
+renderer.outputEncoding=THREE.sRGBEncoding;
+renderer.toneMapping=THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure=.95;
+renderer.autoClear=false;
+
+// sky: full-screen shader with drifting fbm clouds and halftone shading
+const skyScene=new THREE.Scene(), orthoCam=new THREE.OrthographicCamera(-1,1,1,-1,0,1);
+const skyU={uRes:{value:new THREE.Vector2(1,1)},uTime:{value:0},uScroll:{value:0},uDpr:{value:DPR}};
+skyScene.add(new THREE.Mesh(new THREE.PlaneGeometry(2,2),new THREE.ShaderMaterial({uniforms:skyU,depthTest:false,depthWrite:false,
+  vertexShader:'varying vec2 vUv;void main(){vUv=uv;gl_Position=vec4(position.xy,0.,1.);}',
+  fragmentShader:`precision highp float;
+  uniform vec2 uRes;uniform float uTime;uniform float uScroll;uniform float uDpr;varying vec2 vUv;
+  float hash(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
+  float noise(vec2 p){vec2 i=floor(p),f=fract(p);vec2 u=f*f*(3.-2.*f);
+    return mix(mix(hash(i),hash(i+vec2(1.,0.)),u.x),mix(hash(i+vec2(0.,1.)),hash(i+vec2(1.,1.)),u.x),u.y);}
+  float fbm(vec2 p){float v=0.,a=.5;for(int i=0;i<6;i++){v+=a*noise(p);p=p*2.02+vec2(1.7,9.2);a*=.5;}return v;}
+  void main(){
+    vec2 uv=vUv;float asp=uRes.x/uRes.y;
+    vec3 top=vec3(.071,.208,.722),mid=vec3(.137,.345,.871),hor=vec3(.553,.71,.973);
+    vec3 col=mix(hor,mid,smoothstep(0.,.5,uv.y));col=mix(col,top,smoothstep(.5,1.,uv.y));
+    vec2 p=vec2(uv.x*asp,uv.y)*1.35;p.y-=uScroll*.55;p.x+=uTime*.008;
+    vec2 q=vec2(fbm(p*.6+uTime*.004),fbm(p*.6+3.1));
+    float n=fbm(p+q*.75);
+    float amt=mix(.66,.585,smoothstep(0.,1.,1.-uv.y));
+    float c=smoothstep(amt,amt+.16,n);
+    float lit=fbm(p+q*.75+vec2(-.05,.07));
+    float shade=clamp((lit-n)*7.+.45,0.,1.);
+    vec2 g=gl_FragCoord.xy/(5.5*uDpr);vec2 cell=fract(g)-.5;
+    float rad=.62*shade;float dotm=1.-smoothstep(rad-.1,rad+.1,length(cell));
+    vec3 cloud=mix(vec3(.985,.99,1.),vec3(.66,.74,.92),dotm*.85);
+    cloud=mix(cloud,vec3(1.,.97,.9),(1.-shade)*.25);
+    col=mix(col,cloud,c*.96);
+    col+=(hash(gl_FragCoord.xy+fract(uTime))-.5)*.03;
+    gl_FragColor=vec4(col,1.);
+  }`})));
+
+const scene=new THREE.Scene();
+const camera=new THREE.PerspectiveCamera(32,1,.05,200);
+
+// environment for gold + marble: blue sky dome, warm sun, pale ground
+(function(){
+  const pm=new THREE.PMREMGenerator(renderer), s=new THREE.Scene();
+  const dg=new THREE.SphereGeometry(30,32,16), dp=dg.attributes.position, cols=[];
+  const sm=(a,b,x)=>{const t=clamp01((x-a)/(b-a));return t*t*(3-2*t);};
+  for(let i=0;i<dp.count;i++){const h=dp.getY(i)/30;
+    let r=mix(.9,.66,sm(-.2,.15,h)),g=mix(.8,.84,sm(-.2,.15,h)),b=mix(.64,1.2,sm(-.2,.15,h));
+    r=mix(r,.15,sm(.15,.9,h)); g=mix(g,.34,sm(.15,.9,h)); b=mix(b,.96,sm(.15,.9,h)); cols.push(r,g,b);}
+  dg.setAttribute('color',new THREE.Float32BufferAttribute(cols,3));
+  s.add(new THREE.Mesh(dg,new THREE.MeshBasicMaterial({vertexColors:true,side:THREE.BackSide})));
+  const sun=new THREE.Mesh(new THREE.PlaneGeometry(10,6),new THREE.MeshBasicMaterial({color:new THREE.Color(5,4.4,3.4),side:THREE.DoubleSide}));
+  sun.position.set(-14,16,12); sun.lookAt(0,0,0); s.add(sun);
+  const fill=new THREE.Mesh(new THREE.PlaneGeometry(14,4),new THREE.MeshBasicMaterial({color:new THREE.Color(2.2,2.3,2.6),side:THREE.DoubleSide}));
+  fill.position.set(15,4,10); fill.lookAt(0,0,0); s.add(fill);
+  scene.environment=pm.fromScene(s,.02).texture; pm.dispose();
+})();
+scene.add(new THREE.HemisphereLight(0xcfe0ff,0xb59b72,.55));
+const sunL=new THREE.DirectionalLight(0xfff1d8,1.6); sunL.position.set(-6,9,7); scene.add(sunL);
+
+const rig=new THREE.Group(); scene.add(rig);
+
+// marble texture
+function marbleTex(){
+  const c=document.createElement('canvas'); c.width=c.height=1024; const g=c.getContext('2d');
+  g.fillStyle='#ece7de'; g.fillRect(0,0,1024,1024);
+  let seed=11; const rnd=()=>{seed=(seed*16807)%2147483647;return seed/2147483647;};
+  for(let i=0;i<46;i++){
+    g.beginPath(); let x=rnd()*1024, y=rnd()*1024; g.moveTo(x,y);
+    for(let k=0;k<6;k++){x+=(rnd()-.35)*260; y+=(rnd()-.5)*200; g.quadraticCurveTo(x+(rnd()-.5)*120,y+(rnd()-.5)*120,x,y);}
+    g.strokeStyle=`rgba(${120+rnd()*40|0},${116+rnd()*30|0},${110+rnd()*30|0},${.06+rnd()*.12})`;
+    g.lineWidth=.6+rnd()*2.4; g.shadowColor='rgba(110,100,90,.35)'; g.shadowBlur=4+rnd()*8; g.stroke();
+  }
+  const t=new THREE.CanvasTexture(c); t.encoding=THREE.sRGBEncoding; t.wrapS=t.wrapT=THREE.RepeatWrapping; t.anisotropy=renderer.capabilities.getMaxAnisotropy(); return t;
+}
+const marble=new THREE.MeshStandardMaterial({map:marbleTex(),roughness:.42,metalness:0,color:0xffffff});
+
+// fluted column with a Doric capital
+const column=new THREE.Group(); rig.add(column);
+(function(){
+  const shaft=new THREE.CylinderGeometry(.74,.8,8,144,24,true);
+  const pos=shaft.attributes.position;
+  for(let i=0;i<pos.count;i++){
+    const x=pos.getX(i), z=pos.getZ(i), a=Math.atan2(z,x), r=Math.hypot(x,z);
+    const k=1-.045*Math.pow(.5+.5*Math.cos(a*20),.6);
+    pos.setX(i,x/r*r*k); pos.setZ(i,z/r*r*k);
+  }
+  shaft.computeVertexNormals();
+  const m=new THREE.Mesh(shaft,marble); m.position.y=-4; column.add(m);
+  const prof=[[.74,0],[.8,.04],[.92,.14],[1.02,.24],[1.05,.28],[0,.28]].map(p=>new THREE.Vector2(p[0],p[1]));
+  const ech=new THREE.Mesh(new THREE.LatheGeometry(prof,96),marble); column.add(ech);
+  const neck=new THREE.Mesh(new THREE.TorusGeometry(.76,.035,12,96),marble); neck.rotation.x=Math.PI/2; neck.position.y=-.06; column.add(neck);
+  const abacus=new THREE.Mesh(new THREE.BoxGeometry(2.25,.2,2.25),marble); abacus.position.y=.38; column.add(abacus);
+})();
+
+// golden laurel wreath with a cinnabar ribbon
+const gold=new THREE.MeshStandardMaterial({color:0xc48a22,metalness:1,roughness:.3,envMapIntensity:1});
+const wreath=new THREE.Group(); rig.add(wreath);
+(function(){
+  const R=1.18, leafGeo=new THREE.SphereGeometry(1,14,10);
+  const PAIRS=15, total=2*(PAIRS*2+1);
+  const leaves=new THREE.InstancedMesh(leafGeo,gold,total); let n=0;
+  const berries=new THREE.InstancedMesh(new THREE.SphereGeometry(1,12,8),gold,2*6); let nb=0;
+  const M=new THREE.Matrix4(), Q=new THREE.Quaternion(), E=new THREE.Euler(), S=new THREE.Vector3(), P=new THREE.Vector3();
+  [-1,1].forEach(side=>{
+    const pt=s=>{const a=-Math.PI/2+side*s*Math.PI*.86;return new THREE.Vector3(R*Math.cos(a),R*Math.sin(a),0);};
+    const curve=new THREE.CatmullRomCurve3(Array.from({length:24},(_,i)=>pt(i/23)));
+    wreath.add(new THREE.Mesh(new THREE.TubeGeometry(curve,80,.022,8,false),gold));
+    const leaf=(at,dir,size,tilt)=>{
+      const L=.27*size; P.copy(at).addScaledVector(dir,L*.92);
+      E.set(tilt,0,Math.atan2(dir.y,dir.x)-Math.PI/2); Q.setFromEuler(E);
+      S.set(.085*size,L,.03*size); M.compose(P,Q,S); leaves.setMatrixAt(n++,M);
+    };
+    for(let k=0;k<PAIRS;k++){
+      const s=.04+k*(.9/PAIRS), at=pt(s), ahead=pt(s+.01), tan=ahead.clone().sub(at).normalize();
+      const outN=at.clone().normalize(), size=1-.42*(k/PAIRS);
+      const o=tan.clone().multiplyScalar(.62).addScaledVector(outN,.78).normalize();
+      const i=tan.clone().multiplyScalar(.62).addScaledVector(outN,-.78).normalize();
+      leaf(at,o,size,.35*side); leaf(pt(s+.025),i,size*.94,-.35*side);
+      if(k%3===1&&nb<12){P.copy(at).addScaledVector(outN,.06).addScaledVector(tan,.05);P.z=.06;S.setScalar(.042);M.compose(P,new THREE.Quaternion(),S);berries.setMatrixAt(nb++,M);}
+    }
+    const end=pt(.93), tan=pt(.94).sub(end).normalize(); leaf(end,tan,.6,0);
+  });
+  leaves.count=n; berries.count=nb;
+  wreath.add(leaves,berries);
+  // ribbon knot + tails
+  const silk=new THREE.MeshStandardMaterial({color:0x9e2219,roughness:.55,metalness:.05,side:THREE.DoubleSide});
+  const knot=new THREE.Mesh(new THREE.SphereGeometry(.07,20,14),silk); knot.scale.set(1.1,1,.8); knot.position.set(0,-R,.04); wreath.add(knot);
+  function ribbon(pts,w){
+    const curve=new THREE.CatmullRomCurve3(pts), N=48, v=[], idx=[];
+    for(let i=0;i<=N;i++){
+      const t=i/N, p=curve.getPoint(t), tg=curve.getTangent(t), side=new THREE.Vector3().crossVectors(tg,new THREE.Vector3(0,0,1)).normalize();
+      const tw=Math.sin(t*Math.PI*1.4)*.7; side.applyAxisAngle(tg,tw);
+      const ww=w*(1-.25*t);
+      v.push(p.x+side.x*ww,p.y+side.y*ww,p.z+side.z*ww,p.x-side.x*ww,p.y-side.y*ww,p.z-side.z*ww);
+      if(i<N){const a=i*2;idx.push(a,a+1,a+2,a+1,a+3,a+2);}
+    }
+    const g=new THREE.BufferGeometry(); g.setAttribute('position',new THREE.Float32BufferAttribute(v,3)); g.setIndex(idx); g.computeVertexNormals();
+    return new THREE.Mesh(g,silk);
+  }
+  wreath.add(ribbon([new THREE.Vector3(0,-R,.05),new THREE.Vector3(-.18,-R-.22,.12),new THREE.Vector3(-.1,-R-.45,.06),new THREE.Vector3(-.26,-R-.68,.1)],.07));
+  wreath.add(ribbon([new THREE.Vector3(0,-R,.05),new THREE.Vector3(.2,-R-.2,.1),new THREE.Vector3(.16,-R-.42,.14),new THREE.Vector3(.32,-R-.62,.08)],.07));
+  [-1,1].forEach(sd=>{const loop=new THREE.Mesh(new THREE.TorusGeometry(.1,.032,10,28),silk);loop.scale.set(1.25,.75,.6);loop.position.set(sd*.13,-R+.02,.05);loop.rotation.z=sd*.35;wreath.add(loop);});
+})();
+
+/* ---------- camera states ---------- */
+const WY=2.35; // wreath centre height above the capital
+let narrow=false;
+const stateA={cam:new THREE.Vector3(),look:new THREE.Vector3(),rigX:0,rigY:0,colY:0,sway:1,scale:1};
+function heroState(pd){
+  const rx=narrow?0:2.55, ry=narrow?1.15:0;
+  const start=narrow?new THREE.Vector3(0,1.6,12.5):new THREE.Vector3(.2,1.45,10.4);
+  const lookS=narrow?new THREE.Vector3(0,1.6,0):new THREE.Vector3(.2,1.3,0);
+  const ctr=new THREE.Vector3(rx,WY+ry,0);
+  const a=ease(clamp01(pd/.6)), z=pd<.6?mix(start.z,3.2,ease(pd/.6)):mix(3.2,-6,ease((pd-.6)/.4));
+  stateA.cam.set(mix(start.x,ctr.x,a),mix(start.y,ctr.y,a),z);
+  stateA.look.set(mix(lookS.x,ctr.x,a),mix(lookS.y,ctr.y,a),mix(0,-20,clamp01((pd-.35)/.4)));
+  stateA.rigX=rx; stateA.rigY=ry; stateA.colY=narrow?-40:0; stateA.sway=1-a; stateA.scale=narrow?.82:1;
+  return stateA;
+}
+function finalState(){
+  // wreath sits in the top quarter, above the wordmark
+  const z=narrow?11:8.4, half=z*Math.tan(THREE.MathUtils.degToRad(16));
+  stateA.cam.set(0,WY,z); stateA.look.set(0,WY-half*.52,0);
+  stateA.rigX=0; stateA.rigY=0; stateA.colY=-40; stateA.sway=1; stateA.scale=narrow?.62:.56;
+  return stateA;
+}
+
+/* ---------- loop ---------- */
+let visibleZones=new Set();
+const io=new IntersectionObserver(es=>{es.forEach(e=>e.isIntersecting?visibleZones.add(e.target):visibleZones.delete(e.target));},{rootMargin:'2px'});
+document.querySelectorAll('.sky-zone').forEach(z=>io.observe(z));
+
+function resize(){
+  const w=innerWidth,h=innerHeight; narrow=w/h<.95||w<760;
+  renderer.setSize(w,h,false); camera.aspect=w/h; camera.updateProjectionMatrix();
+  skyU.uRes.value.set(w*DPR,h*DPR);
+}
+addEventListener('resize',resize); resize();
+
+const camPos=new THREE.Vector3(), camLook=new THREE.Vector3(); let first=true, last=performance.now(), smooth={sx:0,sy:0,cy:0,sw:1,sc:1};
+function frame(now){
+  requestAnimationFrame(frame);
+  if(!visibleZones.size && !first) return;
+  const t=RM?0:now/1000, dt=Math.min(.1,(now-last)/1000); last=now;
+  skyU.uTime.value=t; skyU.uScroll.value=scrollY/innerHeight;
+  const finalTop=$('#join').getBoundingClientRect().top;
+  const dive=$('#dive'), pd=clamp01(scrollY/(dive.offsetTop+dive.offsetHeight-innerHeight));
+  const st=finalTop<innerHeight*1.02?finalState():heroState(pd);
+  const k=first?1:1-Math.exp(-dt*9);
+  camPos.lerp(st.cam,k); camLook.lerp(st.look,k);
+  if(first){camPos.copy(st.cam);camLook.copy(st.look);}
+  smooth.sx=mix(smooth.sx,st.rigX,k); smooth.sy=mix(smooth.sy,st.rigY,k); smooth.cy=mix(smooth.cy,st.colY,first?1:1-Math.exp(-dt*12)); smooth.sw=mix(smooth.sw,st.sway,k); smooth.sc=mix(smooth.sc,st.scale,k);
+  if(Math.abs(smooth.cy-st.colY)>20) smooth.cy=st.colY;
+  rig.position.set(smooth.sx,smooth.sy,0);
+  column.position.y=smooth.cy;
+  wreath.position.set(0,WY,0); wreath.scale.setScalar(smooth.sc);
+  wreath.rotation.set(-.08*smooth.sw,(Math.sin(t*.35)*.5+.25)*smooth.sw,Math.sin(t*.5)*.03*smooth.sw);
+  camera.position.copy(camPos); camera.lookAt(camLook);
+  renderer.clear(); renderer.render(skyScene,orthoCam); renderer.clearDepth(); renderer.render(scene,camera);
+  first=false;
+}
+requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>
